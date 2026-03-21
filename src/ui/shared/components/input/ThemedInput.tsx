@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   errorText: {
-    ...typography.caption,
+    ...typography.small,
     marginTop: 8,
     marginLeft: 4,
   },

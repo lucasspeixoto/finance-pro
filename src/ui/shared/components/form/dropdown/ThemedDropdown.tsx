@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   errorText: {
-    ...typography.caption,
+    ...typography.small,
     marginTop: 8,
     marginLeft: 4,
   },

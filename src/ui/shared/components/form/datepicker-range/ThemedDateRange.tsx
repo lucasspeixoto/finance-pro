@@ -83,18 +83,18 @@ const ThemedDateRange: React.FC<ThemedDateRangeProps> = ({ label, value, onChang
 
 const styles = StyleSheet.create({
   container: { marginBottom: 16 },
-  label: { 
+  label: {
     ...typography.smallMedium,
     letterSpacing: 1,
-    marginBottom: 8, 
+    marginBottom: 8,
     marginLeft: 4,
   },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
-  input: { 
-    flex: 1, 
+  input: {
+    flex: 1,
     height: 56,
-    borderWidth: 1, 
-    borderRadius: 8, 
+    borderWidth: 1,
+    borderRadius: 8,
     paddingHorizontal: 16,
     justifyContent: 'center',
   },
@@ -105,10 +105,10 @@ const styles = StyleSheet.create({
   inputText: {
     ...typography.body,
   },
-  errorText: { 
-    ...typography.caption,
-    marginTop: 8, 
-    marginLeft: 4, 
+  errorText: {
+    ...typography.small,
+    marginTop: 8,
+    marginLeft: 4,
   },
 });
 

@@ -72,11 +72,11 @@ const ThemedDatePicker: React.FC<ThemedDatePickerProps> = ({
 
 const styles = StyleSheet.create({
   container: { marginBottom: 16 },
-  label: { 
+  label: {
     ...typography.smallMedium,
     letterSpacing: 1,
-    marginBottom: 8, 
-    marginLeft: 4, 
+    marginBottom: 8,
+    marginLeft: 4,
   },
   input: {
     height: 56,
@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
   inputText: {
     ...typography.body,
   },
-  errorText: { 
-    ...typography.caption,
-    marginTop: 8, 
-    marginLeft: 4, 
+  errorText: {
+    ...typography.small,
+    marginTop: 8,
+    marginLeft: 4,
   },
 });
 

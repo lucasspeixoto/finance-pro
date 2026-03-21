@@ -27,10 +27,9 @@ const schema = z.object({
 
 export const LoginView = () => {
   const { signIn } = useAuth();
+
   const { colors } = useTheme();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const { control, handleSubmit, formState } = useForm({
@@ -47,20 +46,12 @@ export const LoginView = () => {
       <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardView}>
           <View style={styles.content}>
-            {/* Brand Identity Section */}
             <View style={styles.brandContainer}>
-              {/* <View
-                style={[styles.logoContainer, { backgroundColor: colors.primaryLight, shadowColor: colors.primary }]}
-              >
-                <Text style={typography.largeTitle}>🛡️</Text>
-              </View> */}
               <Text style={[styles.brandText, { color: colors.primary }]}>Finance Pro</Text>
               <Text style={[styles.titleText, { color: colors.text }]}>Bem-vindo de volta</Text>
             </View>
 
-            {/* Login Form */}
             <View style={styles.formContainer}>
-              {/* Form */}
               <View>
                 <ThemedInputForm
                   control={control}
@@ -86,15 +77,13 @@ export const LoginView = () => {
                 />
               </View>
 
-              {/* Forgot Password Link */}
               <View style={styles.forgotPasswordContainer}>
-                <TouchableOpacity>
+                <TouchableOpacity disabled={true}>
                   <Text style={[styles.forgotPasswordText, { color: colors.primary }]}>Esqueci minha senha</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Primary Action */}
             <TouchableOpacity style={[styles.loginButton, { backgroundColor: colors.primary }]} onPress={handleSubmit(onSubmit)}>
               <Text style={[styles.loginButtonText, { color: colors.surface }]}>Entrar</Text>
             </TouchableOpacity>
@@ -106,15 +95,9 @@ export const LoginView = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-  },
-  keyboardView: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  safeArea: { flex: 1 },
+  keyboardView: { flex: 1 },
   content: {
     flex: 1,
     justifyContent: 'center',
@@ -139,7 +122,7 @@ const styles = StyleSheet.create({
   },
   brandText: {
     ...typography.title,
-    fontWeight: '900', // Override 700 with 900 for brand identity
+    fontWeight: '900',
     textTransform: 'uppercase',
     marginBottom: 8,
   },
@@ -200,6 +183,6 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     ...typography.subtitle,
-    fontWeight: '800', // Override 600 with 800
+    fontWeight: '800',
   },
 });
