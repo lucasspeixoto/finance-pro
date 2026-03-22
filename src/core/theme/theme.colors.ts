@@ -30,6 +30,10 @@ export const lightColors = {
   backgroundSecondary: '#D9E8E7',
   backgroundTertiary: '#FFFFFF',
   icon: '#6B7280',
+  onPrimary: '#FFFFFF',
+  surfaceContainerLow: '#F7FAF8',
+  surfaceContainerHigh: '#EBF1F0',
+  surfaceContainerHighest: '#E3EAE8',
   statusBar: 'dark' as const,
 };
 
@@ -65,6 +69,10 @@ export const darkColors = {
   backgroundSecondary: '#082928',
   backgroundTertiary: '#000000',
   icon: '#94A3B8',
+  onPrimary: '#003735',
+  surfaceContainerLow: '#171A1A',
+  surfaceContainerHigh: '#232828',
+  surfaceContainerHighest: '#2D3232',
   statusBar: 'light' as const,
 };
 

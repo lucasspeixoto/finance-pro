@@ -6,6 +6,7 @@ import { TransactionRow } from '@/src/ui/transactions/components/TransactionRow'
 import { formatCurrency } from '@/src/utils/currency';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -140,7 +141,7 @@ export default function HomeScreen() {
                       title={tx.description || tx.categories?.name || 'Transação'}
                       subtitle={`${tx.categories?.name || 'Sem categoria'} • ${new Date(tx.date).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}`}
                       amount={`${tx.type === 'income' ? '+' : '-'} ${formatCurrency(tx.amount)}`}
-                      amountColor={tx.type === 'income' ? colors.success : colors.text}
+                      amountColor={tx.type === 'income' ? colors.success : colors.danger}
                       iconColor={tx.categories?.color || (tx.type === 'income' ? colors.success : colors.primary)}
                     />
                   ))
@@ -178,7 +179,10 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={[styles.fab, { backgroundColor: colors.primary }]}>
+      <TouchableOpacity
+        style={[styles.fab, { backgroundColor: colors.primary }]}
+        onPress={() => router.push('/(modals)/add-transaction')}
+      >
         <MaterialIcons name="add" size={28} color={isDark ? colors.background : colors.surface} />
       </TouchableOpacity>
     </SafeAreaView>
@@ -280,15 +284,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   donutPlaceholder: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
     borderWidth: 16,
+    padding: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },
   donutTotal: {
-    ...typography.title,
+    ...typography.subtitle,
   },
   donutLabel: {
     ...typography.small,

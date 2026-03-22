@@ -13,6 +13,10 @@ class TransactionsRepository {
   async getByDateRange(startDate: string, endDate: string) {
     return await transactionsService.getByDateRange(startDate, endDate);
   }
+
+  async create(transaction: Omit<Transaction, 'id' | 'created_at'>) {
+    return await transactionsService.create(transaction);
+  }
 }
 
 export const transactionsRepository = new TransactionsRepository();

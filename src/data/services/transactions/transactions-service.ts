@@ -25,6 +25,14 @@ class TransactionsService {
       .lte('date', endDate)
       .order('date', { ascending: false });
   }
+
+  async create(transaction: Omit<Transaction, 'id' | 'created_at'>): Promise<{ data: Transaction | null; error: any }> {
+    return await supabase
+      .from('transactions')
+      .insert([transaction])
+      .select()
+      .single();
+  }
 }
 
 export const transactionsService = new TransactionsService();
