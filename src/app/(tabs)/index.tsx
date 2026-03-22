@@ -179,11 +179,13 @@ export default function HomeScreen() {
             <Text style={[styles.cardTitle, { color: colors.text, marginBottom: 16 }]}>Minhas Contas</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.accountsScroll}>
               {accounts.length > 0 ? (
-                accounts.map(acc => (
-                  <AccountCard
-                    key={acc.id}
-                    name={acc.name}
-                    balance={formatCurrency(acc.balance)}
+                [...accounts]
+                  .sort((a, b) => Number(b.balance) - Number(a.balance))
+                  .map(acc => (
+                    <AccountCard
+                      key={acc.id}
+                      name={acc.name}
+                      balance={formatCurrency(acc.balance)}
                     borderColor={acc.color || (isDark ? colors.border : colors.primary)}
                   />
                 ))
