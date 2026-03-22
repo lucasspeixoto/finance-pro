@@ -1,16 +1,16 @@
-import { useState, useCallback, useEffect } from 'react';
-import { router } from 'expo-router';
-import { useAuth } from '@/src/ui/auth/view-models/useAuth';
-import { useLoadingStore } from '../../../shared/hooks/use-loading';
-import { useAlertBoxStore } from '../../../shared/hooks/use-alert-box';
-import { categoriesRepository } from '@/src/data/repositories/categories/categories-repository';
 import { accountsRepository } from '@/src/data/repositories/accounts/accounts-repository';
+import { categoriesRepository } from '@/src/data/repositories/categories/categories-repository';
 import { transactionsRepository } from '@/src/data/repositories/transactions/transactions-repository';
-import type { Category } from '@/src/domain/models/categories/category.model';
 import type { Account } from '@/src/domain/models/accounts/account.model';
+import type { Category } from '@/src/domain/models/categories/category.model';
 import type { TransactionType } from '@/src/domain/models/transactions/transaction.model';
-import { useDashboardStore } from '../../dashboard/stores/dashboard-store';
+import { useAuth } from '@/src/ui/auth/view-models/useAuth';
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
+import { useAlertBoxStore } from '../../../shared/hooks/use-alert-box';
+import { useLoadingStore } from '../../../shared/hooks/use-loading';
+import { useDashboardStore } from '../../dashboard/stores/dashboard-store';
 
 export function useAddTransaction() {
   const { user } = useAuth();
@@ -38,7 +38,7 @@ export function useAddTransaction() {
           categoriesRepository.getAll(),
           accountsRepository.getAll()
         ]);
-        
+
         if (catsRes.error) throw new Error(catsRes.error.message);
         if (accsRes.error) throw new Error(accsRes.error.message);
 
@@ -47,9 +47,8 @@ export function useAddTransaction() {
         setAccounts(accsRes.data || []);
 
         setSelectedCategoryId(fetchedCategories.find(c => c.type === 'expense')?.id || null);
-      } catch (error: any) {
-        console.error('Error fetching data:', error);
-        setMessage(error.message || 'Erro ao carregar dados iniciais.');
+      } catch (error) {
+        setMessage('Erro ao carregar dados iniciais.\n' + JSON.stringify(error));
         setIsVisible(true);
       }
     };
@@ -90,7 +89,7 @@ export function useAddTransaction() {
 
     // Convert '1.200,50' or '1200.50' to number
     const normalizedAmount = parseFloat(amountInput.replace(/\./g, '').replace(',', '.'));
-    
+
     if (isNaN(normalizedAmount) || normalizedAmount <= 0) {
       setMessage('Valor inválido.');
       setIsVisible(true);
@@ -113,7 +112,7 @@ export function useAddTransaction() {
       };
 
       const { error } = await transactionsRepository.create(newTransaction);
-      
+
       if (error) throw new Error(error.message);
 
       // Refresh Dashboard Data
@@ -121,12 +120,12 @@ export function useAddTransaction() {
 
       setMessage('Transação salva com sucesso!');
       setIsVisible(true);
-      
+
       // Navigate back
       router.back();
 
-    } catch (error: any) {
-      setMessage(error.message || 'Erro ao salvar transação.');
+    } catch (error) {
+      setMessage('Erro ao salvar transação.\n' + JSON.stringify(error));
       setIsVisible(true);
     } finally {
       setIsLoading(false);

@@ -1,11 +1,12 @@
 import { useTheme } from '@/src/core/theme/theme.hooks';
 import { typography } from '@/src/core/theme/theme.typography';
+import type { MaterialIconName } from '@/src/domain/models/icon/material';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 interface TransactionRowProps {
-  icon: React.ComponentProps<typeof MaterialIcons>['name'];
+  icon: MaterialIconName;
   title: string;
   subtitle: string;
   amount: string;

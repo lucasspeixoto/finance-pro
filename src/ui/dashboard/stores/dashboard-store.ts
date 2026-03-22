@@ -1,8 +1,8 @@
-import { create } from 'zustand';
 import { accountsRepository } from '@/src/data/repositories/accounts/accounts-repository';
 import { transactionsRepository } from '@/src/data/repositories/transactions/transactions-repository';
-import type { Account } from '@/src/domain/models/accounts/account.model';
 import type { TransactionWithCategory } from '@/src/data/services/transactions/transactions-service';
+import type { Account } from '@/src/domain/models/accounts/account.model';
+import { create } from 'zustand';
 
 export interface CategoryExpense {
   id: string;
@@ -21,7 +21,7 @@ interface DashboardState {
   accounts: Account[];
   isLoading: boolean;
   error: string | null;
-  
+
   fetchDashboardData: () => Promise<void>;
   reset: () => void;
 }
@@ -50,15 +50,15 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   fetchDashboardData: async () => {
     try {
       set({ isLoading: true, error: null });
-      
+
       const now = new Date();
       const startOfMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
-      
+
       // Calculate the end of the month
       const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
       nextMonth.setMilliseconds(nextMonth.getMilliseconds() - 1);
       const endOfMonthStr = nextMonth.toISOString().split('T')[0];
-      
+
       const [accountsRes, monthlyTxRes, recentTxRes] = await Promise.all([
         accountsRepository.getAll(),
         transactionsRepository.getByDateRange(startOfMonthStr, endOfMonthStr),
@@ -81,7 +81,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       // 3. Top 2 Categories by Expense
       const expenseTxs = monthlyTxs.filter(tx => tx.type === 'expense' && tx.category_id);
       const categoryMap = new Map<string, { name: string, amount: number, color?: string }>();
-      
+
       for (const tx of expenseTxs) {
         if (!tx.category_id || !tx.categories) continue;
         const existing = categoryMap.get(tx.category_id) || { name: tx.categories.name, amount: 0, color: tx.categories.color ?? undefined };
@@ -90,7 +90,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       }
 
       const totalExpensesForCategories = Array.from(categoryMap.values()).reduce((acc, cat) => acc + cat.amount, 0);
-      
+
       const sortedCategories = Array.from(categoryMap.entries())
         .map(([id, data]) => ({
           id,
@@ -112,9 +112,8 @@ export const useDashboardStore = create<DashboardState>((set) => ({
         isLoading: false
       });
 
-    } catch (e: any) {
-      console.error('Dashboard store fetch error:', e);
-      set({ error: e.message || 'Error loading dashboard data', isLoading: false });
+    } catch (error) {
+      set({ error: `Error loading dashboard data.\n${JSON.stringify(error)}`, isLoading: false });
     }
   },
 }));

@@ -25,36 +25,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const checkNetworkAndSession = async () => {
-      setIsLoading(true);
+      try {
+        setIsLoading(true);
 
-      const networkState = await Network.getNetworkStateAsync();
-      const isConnected = networkState.isConnected ?? false;
+        const networkState = await Network.getNetworkStateAsync();
+        const isConnected = networkState.isConnected ?? false;
 
-      const session = await authRepository.getSession();
+        const session = await authRepository.getSession();
 
-      if (session) {
-        if (!isConnected) {
-          // User is offline - sign out
-          await authRepository.signOut();
-          setSession(null);
-          router.replace('/(auth)/login');
+        if (session) {
+          if (!isConnected) {
+            // User is offline - sign out
+            await authRepository.signOut();
+            setSession(null);
+            router.replace('/(auth)/login');
+          } else {
+            setSession(session);
+            router.replace('/(tabs)');
+          }
         } else {
-          setSession(session);
-          router.replace('/(tabs)');
+          router.replace('/(auth)/login');
         }
-      } else {
-        router.replace('/(auth)/login');
+      } catch (error) {
+        setMessage('Erro ao verificar sessão. Tente novamente.');
+        setIsVisible(true);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     checkNetworkAndSession();
 
-    const { data: subscription } = authRepository.onAuthStateChange((newSession) => {
-      setSession(newSession);
-    });
+    let subscription: any;
+    try {
+      const { data } = authRepository.onAuthStateChange((newSession) => {
+        setSession(newSession);
+      });
+      subscription = data;
+    } catch (error: any) {
+      console.error('Error on auth state change listener:', error);
+    }
 
-    return () => subscription.subscription.unsubscribe();
+    return () => {
+      if (subscription?.subscription) {
+        subscription.subscription.unsubscribe();
+      }
+    };
   }, []);
 
   async function signIn(email: string, password: string) {

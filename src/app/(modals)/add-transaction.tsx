@@ -1,5 +1,6 @@
 import { useTheme } from '@/src/core/theme/theme.hooks';
 import { typography } from '@/src/core/theme/theme.typography';
+import type { MaterialIconName } from '@/src/domain/models/icon/material';
 import { useAddTransaction } from '@/src/ui/transactions/view-models/useAddTransaction';
 import { MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -148,21 +149,21 @@ export default function AddTransactionScreen() {
             <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
               <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Categoria</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-                {availableCategories.map(cat => {
-                  const isSelected = selectedCategoryId === cat.id;
+                {availableCategories.map(category => {
+                  const isSelected = selectedCategoryId === category.id;
                   return (
                     <TouchableOpacity
-                      key={cat.id}
+                      key={category.id}
                       style={styles.selectorItem}
-                      onPress={() => setSelectedCategoryId(cat.id)}
+                      onPress={() => setSelectedCategoryId(category.id)}
                     >
                       <View style={[
                         styles.iconContainer,
-                        { backgroundColor: isSelected ? cat.color || colors.primary : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
-                        isSelected && { shadowColor: cat.color || colors.primary, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }
+                        { backgroundColor: isSelected ? category.color || colors.primary : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
+                        isSelected && { shadowColor: category.color || colors.primary, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }
                       ]}>
                         <MaterialIcons
-                          name={(cat.icon as any) || 'category'}
+                          name={(category.icon as MaterialIconName) || 'category'}
                           size={24}
                           color={isSelected ? '#FFFFFF' : colors.textTertiary}
                         />
@@ -171,7 +172,7 @@ export default function AddTransactionScreen() {
                         styles.selectorText,
                         { color: isSelected ? colors.text : colors.textTertiary, fontWeight: isSelected ? '600' : '400' }
                       ]}>
-                        {cat.name}
+                        {category.name}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -184,21 +185,21 @@ export default function AddTransactionScreen() {
           <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
             <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Conta</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-              {accounts.map(acc => {
-                const isSelected = selectedAccountId === acc.id;
+              {accounts.map(account => {
+                const isSelected = selectedAccountId === account.id;
                 return (
                   <TouchableOpacity
-                    key={acc.id}
+                    key={account.id}
                     style={styles.selectorItem}
-                    onPress={() => setSelectedAccountId(acc.id)}
+                    onPress={() => setSelectedAccountId(account.id)}
                   >
                     <View style={[
                       styles.iconContainer,
-                      { backgroundColor: isSelected ? acc.color || colors.primary : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
-                      isSelected && { shadowColor: acc.color || colors.primary, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }
+                      { backgroundColor: isSelected ? account.color || colors.primary : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
+                      isSelected && { shadowColor: account.color || colors.primary, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }
                     ]}>
                       <MaterialIcons
-                        name={(acc.icon as any) || "account-balance"}
+                        name={(account.icon as MaterialIconName) || "account-balance"}
                         size={24}
                         color={isSelected ? '#FFFFFF' : colors.textTertiary}
                       />
@@ -207,7 +208,7 @@ export default function AddTransactionScreen() {
                       styles.selectorText,
                       { color: isSelected ? colors.text : colors.textTertiary, fontWeight: isSelected ? '600' : '400' }
                     ]}>
-                      {acc.name}
+                      {account.name}
                     </Text>
                   </TouchableOpacity>
                 );
