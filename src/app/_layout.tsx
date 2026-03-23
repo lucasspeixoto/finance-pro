@@ -19,6 +19,8 @@ function MainLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
         <Stack.Screen name="(modals)/add-transaction" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="(modals)/add-account" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="(modals)/add-category" options={{ presentation: 'modal', headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </>
