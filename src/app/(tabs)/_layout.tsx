@@ -42,10 +42,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="accounts"
+        name="admin"
         options={{
-          title: 'Contas',
-          tabBarIcon: ({ color }) => <MaterialIcons size={24} name="account-balance" color={color} />,
+          title: 'Admin',
+          tabBarIcon: ({ color }) => <MaterialIcons size={24} name="admin-panel-settings" color={color} />,
         }}
       />
       <Tabs.Screen

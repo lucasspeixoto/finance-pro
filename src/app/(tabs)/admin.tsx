@@ -10,7 +10,7 @@ export default function AccountsScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>Accounts</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Administração</Text>
       </View>
       <View style={styles.content}>
         <Text style={[typography.body, { color: colors.textSecondary }]}>
