@@ -11,6 +11,7 @@ import { Platform } from 'react-native';
 import { useAlertBoxStore } from '../../../shared/hooks/use-alert-box';
 import { useLoadingStore } from '../../../shared/hooks/use-loading';
 import { useDashboardStore } from '../../dashboard/stores/dashboard-store';
+import { useHistoryStore } from '../../history/stores/history-store';
 
 export function useAddTransaction() {
   const { user } = useAuth();
@@ -117,6 +118,12 @@ export function useAddTransaction() {
 
       // Refresh Dashboard Data
       await fetchDashboardData();
+      
+      // Refresh History Data
+      const { data: historyData } = await transactionsRepository.getRecent(100);
+      if (historyData) {
+        useHistoryStore.getState().setTransactions(historyData);
+      }
 
       setMessage('Transação salva com sucesso!');
       setIsVisible(true);

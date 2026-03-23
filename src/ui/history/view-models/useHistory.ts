@@ -1,24 +1,25 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@/src/core/theme/theme.hooks';
 import { useHistoryStore } from '@/src/ui/history/stores/history-store';
 import { useDashboardStore } from '@/src/ui/dashboard/stores/dashboard-store';
+import { transactionsRepository } from '@/src/data/repositories/transactions/transactions-repository';
 
 export function useHistory() {
   const { colors, isDark } = useTheme();
   const {
     transactions,
-    filteredTransactions,
     isLoading,
     error,
-    fetchTransactions,
-    setSearchQuery,
     searchQuery,
-    deleteTransaction,
     selectedCategoryId,
-    setSelectedCategoryId,
     selectedAccountId,
-    setSelectedAccountId,
     selectedDate,
+    setTransactions,
+    setLoading,
+    setError,
+    setSearchQuery,
+    setSelectedCategoryId,
+    setSelectedAccountId,
     setSelectedDate
   } = useHistoryStore();
 
@@ -27,7 +28,24 @@ export function useHistory() {
   const [showAccountPicker, setShowAccountPicker] = useState(false);
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
 
-  const { accounts } = useDashboardStore();
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
+
+  const { accounts, fetchDashboardData } = useDashboardStore();
+
+  const fetchTransactions = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data, error: fetchErr } = await transactionsRepository.getRecent(100);
+      if (fetchErr) throw fetchErr;
+      setTransactions(data || []);
+    } catch (err: any) {
+      setError(`Erro ao carregar transações!\n ${JSON.stringify(err)}`);
+    } finally {
+      setLoading(false);
+    }
+  }, [setTransactions, setLoading, setError]);
 
   useEffect(() => {
     fetchTransactions();
@@ -40,6 +58,39 @@ export function useHistory() {
 
     return () => clearTimeout(handler);
   }, [localSearchQuery, setSearchQuery]);
+
+  const filteredTransactions = useMemo(() => {
+    let filtered = [...transactions];
+
+    // Filter by Month and Year
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+    filtered = filtered.filter(t => {
+      const tDate = new Date(t.date);
+      return tDate.getFullYear() === year && tDate.getMonth() === month;
+    });
+
+    // Filter by Search Query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(t =>
+        (t.description?.toLowerCase().includes(query)) ||
+        (t.categories?.name?.toLowerCase().includes(query))
+      );
+    }
+
+    // Filter by Category
+    if (selectedCategoryId) {
+      filtered = filtered.filter(t => t.category_id === selectedCategoryId);
+    }
+
+    // Filter by Account
+    if (selectedAccountId) {
+      filtered = filtered.filter(t => t.account_id === selectedAccountId);
+    }
+
+    return filtered;
+  }, [transactions, searchQuery, selectedCategoryId, selectedAccountId, selectedDate]);
 
   const categories = useMemo(() => {
     const uniqueCats = new Map();
@@ -88,6 +139,34 @@ export function useHistory() {
   const selectedCategory = categories.find(c => c.id === selectedCategoryId);
   const selectedAccount = accountsFilterList.find(a => a.id === selectedAccountId);
 
+  const handleDeletePress = (id: string) => {
+    setTransactionToDelete(id);
+    setShowConfirmDelete(true);
+  };
+
+  const confirmDelete = async () => {
+    if (transactionToDelete) {
+      try {
+        const { error: delErr } = await transactionsRepository.delete(transactionToDelete);
+        if (delErr) throw delErr;
+
+        setTransactions(transactions.filter(t => t.id !== transactionToDelete));
+        setTransactionToDelete(null);
+        setShowConfirmDelete(false);
+        
+        // Refresh dashboard data to sync balances and recent transactions
+        fetchDashboardData();
+      } catch (err: any) {
+        setError(`Erro ao deletar transação!\n ${JSON.stringify(err)}`);
+      }
+    }
+  };
+
+  const cancelDelete = () => {
+    setTransactionToDelete(null);
+    setShowConfirmDelete(false);
+  };
+
   return {
     colors,
     isDark,
@@ -114,6 +193,10 @@ export function useHistory() {
     groupedTransactions,
     selectedCategory,
     selectedAccount,
-    deleteTransaction
+    handleDeletePress,
+    showConfirmDelete,
+    setShowConfirmDelete,
+    confirmDelete,
+    cancelDelete
   };
 }

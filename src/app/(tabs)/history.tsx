@@ -7,6 +7,7 @@ import { useHistory } from '@/src/ui/history/view-models/useHistory';
 import { HistoryHeader } from '@/src/ui/history/components/HistoryHeader';
 import { FilterModals } from '@/src/ui/history/components/FilterModals';
 import { TransactionListGroup } from '@/src/ui/history/components/TransactionListGroup';
+import { ConfirmationDialog } from '@/src/shared/components/dialogs/ConfirmationDialog';
 
 export default function HistoryScreen() {
   const {
@@ -33,7 +34,10 @@ export default function HistoryScreen() {
     groupedTransactions,
     selectedCategory,
     selectedAccount,
-    deleteTransaction
+    handleDeletePress,
+    showConfirmDelete,
+    confirmDelete,
+    cancelDelete
   } = useHistory();
 
   if (isLoading && filteredTransactions.length === 0) {
@@ -73,7 +77,7 @@ export default function HistoryScreen() {
             title={group.title}
             data={group.data}
             colors={colors}
-            onDelete={deleteTransaction}
+            onDelete={handleDeletePress}
             onEdit={(id) => console.log('Edit', id)}
           />
         )}
@@ -111,6 +115,17 @@ export default function HistoryScreen() {
         accounts={accountsFilterList}
         selectedAccountId={selectedAccountId}
         onSelectAccount={setSelectedAccountId}
+      />
+
+      <ConfirmationDialog
+        visible={showConfirmDelete}
+        title="Excluir Transação"
+        message="Tem certeza que deseja excluir esta transação? Esta ação não pode ser desfeita."
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        colors={colors}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
       />
     </SafeAreaView>
   );

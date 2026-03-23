@@ -3,11 +3,12 @@ import { typography } from '@/src/core/theme/theme.typography';
 import type { MaterialIconName } from '@/src/domain/models/icon/material';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import Reanimated, { 
-  SharedValue, 
-  useAnimatedStyle, 
+import Reanimated, {
+  SharedValue,
+  useAnimatedStyle,
 } from 'react-native-reanimated';
 
 interface SwipeableTransactionRowProps {
@@ -42,12 +43,12 @@ export function SwipeableTransactionRow({
 
     return (
       <Reanimated.View style={[styles.leftAction, styleAnimation]}>
-        <TouchableOpacity 
-          style={[styles.actionButton, { backgroundColor: colors.danger }]} 
+        <RectButton
+          style={[styles.actionButton, { backgroundColor: colors.danger }]}
           onPress={onDelete}
         >
           <MaterialIcons name="delete" size={24} color={isDark ? colors.background : colors.surface} />
-        </TouchableOpacity>
+        </RectButton>
       </Reanimated.View>
     );
   };
@@ -61,12 +62,12 @@ export function SwipeableTransactionRow({
 
     return (
       <Reanimated.View style={[styles.rightAction, styleAnimation]}>
-        <TouchableOpacity 
-          style={[styles.actionButton, { backgroundColor: colors.primary }]} 
+        <RectButton
+          style={[styles.actionButton, { backgroundColor: colors.primary }]}
           onPress={onEdit}
         >
           <MaterialIcons name="edit" size={24} color={isDark ? colors.onPrimary : colors.surface} />
-        </TouchableOpacity>
+        </RectButton>
       </Reanimated.View>
     );
   };
