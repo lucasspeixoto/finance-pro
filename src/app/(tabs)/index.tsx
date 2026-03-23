@@ -1,14 +1,17 @@
 import { useTheme } from '@/src/core/theme/theme.hooks';
 import { typography } from '@/src/core/theme/theme.typography';
+import type { MaterialIconName } from '@/src/domain/models/icon/material';
 import { useDashboard } from '@/src/ui/dashboard/view-models/useDashboard';
 import { AccountCard } from '@/src/ui/transactions/components/AccountCard';
 import { TransactionRow } from '@/src/ui/transactions/components/TransactionRow';
 import { formatCurrency } from '@/src/utils/currency';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pie, PolarChart } from 'victory-native';
 
 export default function HomeScreen() {
   const { colors, isDark } = useTheme();
@@ -85,19 +88,35 @@ export default function HomeScreen() {
                 <MaterialIcons name="pie-chart" size={24} color={colors.textTertiary} />
               </View>
 
-              {/* Mock Donut Chart */}
+              {/* Live Pie Chart */}
               <View style={styles.donutContainer}>
-                <View
-                  style={[
-                    styles.donutPlaceholder,
-                    { borderColor: colors.border, borderTopColor: colors.primary, borderRightColor: colors.tertiary },
-                  ]}
-                >
-                  <Text style={[styles.donutTotal, { color: colors.text }]} numberOfLines={1} adjustsFontSizeToFit>
-                    {formatCurrency(monthlyExpense)}
-                  </Text>
-                  <Text style={[styles.donutLabel, { color: colors.textTertiary }]}>TOTAL</Text>
-                </View>
+                {topCategories.length > 0 ? (
+                  <View style={styles.chartWrapper}>
+                    <PolarChart
+                      data={topCategories.map((cat, i) => ({
+                        label: cat.name,
+                        value: cat.amount,
+                        color: cat.color || (i === 0 ? colors.primary : i === 1 ? colors.tertiary : colors.danger)
+                      }))}
+                      colorKey={"color"}
+                      valueKey={"value"}
+                      labelKey={"label"}
+                    >
+                      <Pie.Chart innerRadius={65} />
+                    </PolarChart>
+                    <View style={styles.donutOverlay} pointerEvents="none">
+                      <Text style={[styles.donutTotal, { color: colors.text }]} numberOfLines={1} adjustsFontSizeToFit>
+                        {formatCurrency(monthlyExpense)}
+                      </Text>
+                      <Text style={[styles.donutLabel, { color: colors.textTertiary }]}>TOTAL</Text>
+                    </View>
+                  </View>
+                ) : (
+                  <View style={[styles.donutPlaceholder, { borderColor: colors.border }]}>
+                    <MaterialIcons name="pie-chart-outline" size={48} color={colors.textTertiary} />
+                    <Text style={[styles.donutLabel, { color: colors.textTertiary, marginTop: 8 }]}>SEM DADOS</Text>
+                  </View>
+                )}
               </View>
 
               <View style={styles.categoryList}>
@@ -105,7 +124,7 @@ export default function HomeScreen() {
                   topCategories.map((cat, index) => (
                     <View key={cat.id || index} style={styles.categoryRow}>
                       <View style={styles.categoryRowLeft}>
-                        <View style={[styles.dot, { backgroundColor: cat.color || (index === 0 ? colors.primary : colors.tertiary) }]} />
+                        <View style={[styles.dot, { backgroundColor: cat.color || (index === 0 ? colors.primary : index === 1 ? colors.tertiary : colors.danger) }]} />
                         <Text style={[styles.categoryName, { color: colors.textSecondary }]}>{cat.name}</Text>
                       </View>
                       <Text style={[styles.categoryPercentage, { color: colors.text }]}>{cat.percentage}%</Text>
@@ -136,11 +155,11 @@ export default function HomeScreen() {
                   recentTransactions.map(tx => (
                     <TransactionRow
                       key={tx.id}
-                      icon={(tx.categories?.icon || (tx.type === 'income' ? 'trending-up' : 'receipt')) as any}
+                      icon={(tx.categories?.icon || (tx.type === 'income' ? 'trending-up' : 'receipt')) as MaterialIconName}
                       title={tx.description || tx.categories?.name || 'Transação'}
                       subtitle={`${tx.categories?.name || 'Sem categoria'} • ${new Date(tx.date).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}`}
                       amount={`${tx.type === 'income' ? '+' : '-'} ${formatCurrency(tx.amount)}`}
-                      amountColor={tx.type === 'income' ? colors.success : colors.text}
+                      amountColor={tx.type === 'income' ? colors.success : colors.danger}
                       iconColor={tx.categories?.color || (tx.type === 'income' ? colors.success : colors.primary)}
                     />
                   ))
@@ -160,11 +179,13 @@ export default function HomeScreen() {
             <Text style={[styles.cardTitle, { color: colors.text, marginBottom: 16 }]}>Minhas Contas</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.accountsScroll}>
               {accounts.length > 0 ? (
-                accounts.map(acc => (
-                  <AccountCard
-                    key={acc.id}
-                    name={acc.name}
-                    balance={formatCurrency(acc.balance)}
+                [...accounts]
+                  .sort((a, b) => Number(b.balance) - Number(a.balance))
+                  .map(acc => (
+                    <AccountCard
+                      key={acc.id}
+                      name={acc.name}
+                      balance={formatCurrency(acc.balance)}
                     borderColor={acc.color || (isDark ? colors.border : colors.primary)}
                   />
                 ))
@@ -178,7 +199,10 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={[styles.fab, { backgroundColor: colors.primary }]}>
+      <TouchableOpacity
+        style={[styles.fab, { backgroundColor: colors.primary }]}
+        onPress={() => router.push('/(modals)/add-transaction')}
+      >
         <MaterialIcons name="add" size={28} color={isDark ? colors.background : colors.surface} />
       </TouchableOpacity>
     </SafeAreaView>
@@ -274,24 +298,39 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   donutContainer: {
-    width: 192,
-    height: 192,
+    width: 200,
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  chartWrapper: {
+    width: 180,
+    height: 180,
+    position: 'relative',
+  },
+  donutOverlay: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
   donutPlaceholder: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    borderWidth: 16,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    borderWidth: 2,
+    borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
   },
   donutTotal: {
-    ...typography.title,
+    ...typography.subtitle,
+    fontWeight: '800',
   },
   donutLabel: {
-    ...typography.small,
+    ...typography.extraSmall,
+    letterSpacing: 1,
     opacity: 0.6,
   },
   categoryList: {

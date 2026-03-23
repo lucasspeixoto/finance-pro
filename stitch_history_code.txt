@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stoic Vault - Transações</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#004B50",
+              "on-primary-fixed": "#002022",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "surface-container-lowest": "#0e0e0e",
+              "surface-dim": "#111414",
+              "background": "#111414",
+              "on-error-container": "#ffdad6",
+              "on-tertiary-container": "#ff9190",
+              "surface-tint": "#4db6ac",
+              "surface-container": "#1e2121",
+              "tertiary": "#ffb4ab",
+              "secondary-container": "#334b4d",
+              "error-container": "#93000a",
+              "primary-container": "#004B50",
+              "on-secondary-container": "#cee9ea",
+              "surface": "#111414",
+              "on-secondary": "#1e3536",
+              "surface-container-highest": "#323636",
+              "primary": "#4db6ac",
+              "on-surface-variant": "#bfc8c9",
+              "error": "#ffb4ab",
+              "outline-variant": "#404849",
+              "secondary": "#b2cccde",
+              "secondary-fixed": "#cee9ea",
+              "on-secondary-fixed-variant": "#334b4d",
+              "primary-fixed": "#b2ebf2",
+              "on-tertiary-fixed": "#410007",
+              "surface-container-low": "#191c1c",
+              "tertiary-fixed": "#ffdad8",
+              "on-surface": "#e1e3e3",
+              "primary-fixed-dim": "#4db6ac",
+              "on-secondary-fixed": "#002021",
+              "surface-container-high": "#282b2b",
+              "on-background": "#e1e3e3",
+              "on-error": "#690005",
+              "on-tertiary-fixed-variant": "#80272b",
+              "outline": "#899292",
+              "on-tertiary": "#690005",
+              "secondary-fixed-dim": "#b2ccde",
+              "surface-variant": "#3f4949",
+              "on-primary-container": "#b2ebf2",
+              "inverse-surface": "#e1e3e3",
+              "inverse-primary": "#00696d",
+              "inverse-on-surface": "#2e3131",
+              "tertiary-container": "#93000a",
+              "surface-bright": "#373a3a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #111414; color: #e1e3e3; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<main class="flex-grow pb-32 px-6 pt-8">
+<!-- Search and Month Filter (Editorial Layout) -->
+<section class="mb-10 space-y-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-1">
+<h2 class="font-headline font-extrabold text-4xl tracking-tighter">History</h2>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low p-2 rounded-full px-6">
+<span class="material-symbols-outlined text-primary text-sm">calendar_today</span>
+<span class="font-label text-sm font-semibold">Outubro 2023</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg py-4 pl-12 pr-6 focus:ring-1 focus:ring-primary/30 transition-all text-on-surface placeholder:text-outline/50" placeholder="Buscar transações..." type="text"/>
+</div>
+<!-- Chips Filters -->
+<div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+<button class="bg-primary text-on-primary px-5 py-2 rounded-full text-sm font-bold flex items-center gap-2 flex-shrink-0">
+<span class="material-symbols-outlined text-sm">tune</span>
+                    Todos
+                </button>
+<button class="bg-surface-container px-5 py-2 rounded-full text-sm font-medium text-on-surface flex items-center gap-2 flex-shrink-0 hover:bg-surface-container-high">
+                    Categorias
+                    <span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+<button class="bg-surface-container px-5 py-2 rounded-full text-sm font-medium text-on-surface flex items-center gap-2 flex-shrink-0 hover:bg-surface-container-high">
+                    Contas
+                    <span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+</div>
+</section>
+<!-- Transactions List -->
+<div class="space-y-10">
+<!-- Group: Today -->
+<div class="space-y-4">
+<div class="flex justify-between items-center px-2">
+<h3 class="font-headline font-bold text-lg">Hoje, 24 Out</h3>
+<span class="font-label text-xs text-outline font-semibold">- R$ 1.240,00</span>
+</div>
+<div class="space-y-3">
+<!-- Transaction Item -->
+<div class="bg-surface-container p-5 flex items-center justify-between group cursor-pointer hover:bg-surface-container-high transition-colors rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">shopping_cart</span>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface">Supermercado Silva</p>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label text-xs text-outline">Nubank Platinum</span>
+<span class="w-1 h-1 rounded-full bg-outline/30"></span>
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-bold text-error">- R$ 450,20</p>
+<p class="font-label text-[10px] text-outline uppercase tracking-wider">14:20</p>
+</div>
+</div>
+<!-- Transaction Item -->
+<div class="bg-surface-container p-5 flex items-center justify-between group cursor-pointer hover:bg-surface-container-high transition-colors rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface">Uber Viagem</p>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label text-xs text-outline">Cartão Itaú</span>
+<span class="w-1 h-1 rounded-full bg-outline/30"></span>
+<span class="material-symbols-outlined text-[14px] text-outline">pending</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-bold text-error">- R$ 28,90</p>
+<p class="font-label text-[10px] text-outline uppercase tracking-wider">09:15</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Group: Yesterday -->
+<div class="space-y-4">
+<div class="flex justify-between items-center px-2">
+<h3 class="font-headline font-bold text-lg">Ontem, 23 Out</h3>
+<span class="font-label text-xs text-primary font-semibold">+ R$ 4.500,00</span>
+</div>
+<div class="space-y-3">
+<!-- Transaction Item: Income -->
+<div class="bg-surface-container p-5 flex items-center justify-between group cursor-pointer hover:bg-surface-container-high transition-colors rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary-container/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface">Salário Mensal</p>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label text-xs text-outline">Conta Corrente Bradesco</span>
+<span class="w-1 h-1 rounded-full bg-outline/30"></span>
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-bold text-primary">+ R$ 5.200,00</p>
+<p class="font-label text-[10px] text-outline uppercase tracking-wider">10:00</p>
+</div>
+</div>
+<!-- Transaction Item -->
+<div class="bg-surface-container p-5 flex items-center justify-between group cursor-pointer hover:bg-surface-container-high transition-colors rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface">Restaurante Sabor &amp; Arte</p>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label text-xs text-outline">Nubank Platinum</span>
+<span class="w-1 h-1 rounded-full bg-outline/30"></span>
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-bold text-error">- R$ 124,50</p>
+<p class="font-label text-[10px] text-outline uppercase tracking-wider">20:30</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Group: 22 Out -->
+<div class="space-y-4">
+<div class="flex justify-between items-center px-2">
+<h3 class="font-headline font-bold text-lg">22 Out</h3>
+<span class="font-label text-xs text-outline font-semibold">- R$ 89,00</span>
+</div>
+<div class="space-y-3">
+<!-- Transaction Item -->
+<div class="bg-surface-container p-5 flex items-center justify-between group cursor-pointer hover:bg-surface-container-high transition-colors rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">subscriptions</span>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface">Netflix Subscription</p>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label text-xs text-outline">Cartão Virtual</span>
+<span class="w-1 h-1 rounded-full bg-outline/30"></span>
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-bold text-error">- R$ 55,90</p>
+<p class="font-label text-[10px] text-outline uppercase tracking-wider">04:00</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-surface-container-low/80 backdrop-blur-xl rounded-t-xl shadow-[0_-8px_32px_rgba(0,0,0,0.4)]">
+<a class="flex flex-col items-center justify-center text-on-surface opacity-60 px-4 py-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-label text-[10px] font-medium tracking-wide uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-primary rounded-lg px-4 py-2 scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-[10px] font-medium tracking-wide uppercase mt-1">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface opacity-60 px-4 py-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label text-[10px] font-medium tracking-wide uppercase mt-1">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface opacity-60 px-4 py-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label text-[10px] font-medium tracking-wide uppercase mt-1">Settings</span>
+</a>
+</nav>
+</body></html>
