@@ -13,7 +13,7 @@ import { useLoadingStore } from '../../../shared/hooks/use-loading';
 import { useDashboardStore } from '../../dashboard/stores/dashboard-store';
 import { useHistoryStore } from '../../history/stores/history-store';
 
-export function useAddTransaction() {
+export function useAddTransaction(id?: string) {
   const { user } = useAuth();
   const { setIsLoading } = useLoadingStore();
   const { setMessage, setIsVisible } = useAlertBoxStore();
@@ -47,7 +47,21 @@ export function useAddTransaction() {
         setCategories(fetchedCategories);
         setAccounts(accsRes.data || []);
 
-        setSelectedCategoryId(fetchedCategories.find(c => c.type === 'expense')?.id || null);
+        if (id) {
+          const { data: transaction, error: txError } = await transactionsRepository.getById(id);
+          if (txError) throw new Error(txError.message);
+          if (transaction) {
+            setType(transaction.type);
+            setAmountInput(transaction.amount.toString().replace('.', ','));
+            setDescription(transaction.description || '');
+            setDate(new Date(transaction.date));
+            setIsPaid(transaction.is_paid);
+            setSelectedCategoryId(transaction.category_id || null);
+            setSelectedAccountId(transaction.account_id);
+          }
+        } else {
+          setSelectedCategoryId(fetchedCategories.find(c => c.type === 'expense')?.id || null);
+        }
       } catch (error) {
         setMessage('Erro ao carregar dados iniciais.\n' + JSON.stringify(error));
         setIsVisible(true);
@@ -100,7 +114,7 @@ export function useAddTransaction() {
     try {
       setIsLoading(true);
 
-      const newTransaction = {
+      const transactionData = {
         user_id: user.id,
         account_id: selectedAccountId,
         category_id: type === 'transfer' ? null : selectedCategoryId,
@@ -112,7 +126,9 @@ export function useAddTransaction() {
         notes: null
       };
 
-      const { error } = await transactionsRepository.create(newTransaction);
+      const { error } = id 
+        ? await transactionsRepository.update(id, transactionData)
+        : await transactionsRepository.create(transactionData);
 
       if (error) throw new Error(error.message);
 

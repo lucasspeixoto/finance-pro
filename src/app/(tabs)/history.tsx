@@ -35,6 +35,7 @@ export default function HistoryScreen() {
     selectedCategory,
     selectedAccount,
     handleDeletePress,
+    handleEditPress,
     showConfirmDelete,
     confirmDelete,
     cancelDelete
@@ -78,7 +79,7 @@ export default function HistoryScreen() {
             data={group.data}
             colors={colors}
             onDelete={handleDeletePress}
-            onEdit={(id) => console.log('Edit', id)}
+            onEdit={handleEditPress}
           />
         )}
         contentContainerStyle={styles.listContent}

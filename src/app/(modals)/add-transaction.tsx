@@ -4,13 +4,14 @@ import type { MaterialIconName } from '@/src/domain/models/icon/material';
 import { useAddTransaction } from '@/src/ui/transactions/view-models/useAddTransaction';
 import { MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Platform, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AddTransactionScreen() {
   const { colors, isDark } = useTheme();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
   const {
     type,
@@ -32,7 +33,7 @@ export default function AddTransactionScreen() {
     selectedAccountId,
     setSelectedAccountId,
     handleSave,
-  } = useAddTransaction();
+  } = useAddTransaction(id);
 
   // Filter categories based on transaction type
   const availableCategories = categories.filter(c => c.type === type);
@@ -44,7 +45,7 @@ export default function AddTransactionScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
           <MaterialIcons name="close" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Nova Transação</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{id ? 'Editar Transação' : 'Nova Transação'}</Text>
         <View style={{ width: 40 }} />
       </View>
 

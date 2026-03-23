@@ -10,6 +10,10 @@ class TransactionsRepository {
     return await transactionsService.getRecent(limit);
   }
 
+  async getById(id: string) {
+    return await transactionsService.getById(id);
+  }
+
   async getByDateRange(startDate: string, endDate: string) {
     return await transactionsService.getByDateRange(startDate, endDate);
   }
