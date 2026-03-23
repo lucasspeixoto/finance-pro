@@ -36,11 +36,11 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
       set({ isLoading: true, error: null });
       const { data, error } = await transactionsRepository.getRecent(100);
       if (error) throw error;
-      
+
       set({ transactions: data || [], isLoading: false });
       get().applyFilters();
-    } catch (err: any) {
-      set({ error: err.message || 'Erro ao carregar transações', isLoading: false });
+    } catch (error) {
+      set({ error: `Erro ao carregar transações!\n ${JSON.stringify(error)}`, isLoading: false });
     }
   },
 
@@ -68,25 +68,25 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     try {
       const { error } = await transactionsRepository.delete(id);
       if (error) throw error;
-      
+
       set((state) => ({
         transactions: state.transactions.filter(t => t.id !== id),
       }));
       get().applyFilters();
-    } catch (err: any) {
-      set({ error: err.message || 'Erro ao deletar transação' });
+    } catch (error) {
+      set({ error: `Erro ao deletar transação!\n ${JSON.stringify(error)}` });
     }
   },
 
   applyFilters: () => {
     const { transactions, searchQuery, selectedCategoryId, selectedAccountId, selectedDate } = get();
-    
+
     let filtered = [...transactions];
 
     // Filter by Month and Year
     const year = selectedDate.getFullYear();
     const month = selectedDate.getMonth();
-    
+
     filtered = filtered.filter(t => {
       const tDate = new Date(t.date);
       return tDate.getFullYear() === year && tDate.getMonth() === month;
@@ -94,8 +94,8 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
 
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(t => 
-        (t.description?.toLowerCase().includes(query)) || 
+      filtered = filtered.filter(t =>
+        (t.description?.toLowerCase().includes(query)) ||
         (t.categories?.name?.toLowerCase().includes(query))
       );
     }
