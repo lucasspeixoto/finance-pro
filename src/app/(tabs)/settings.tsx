@@ -7,8 +7,9 @@ import { Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } f
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
-  const { colors } = useTheme();
+  const { colors, themeMode, setThemeMode } = useTheme();
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(true);
+  const [showThemeModal, setShowThemeModal] = useState(false);
 
   const { signOut } = useAuth();
 
@@ -73,14 +74,20 @@ export default function SettingsScreen() {
 
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-            <TouchableOpacity style={styles.rowItem} activeOpacity={0.7}>
+            <TouchableOpacity 
+              style={styles.rowItem} 
+              activeOpacity={0.7}
+              onPress={() => setShowThemeModal(true)}
+            >
               <View style={styles.rowLeft}>
                 <View style={[styles.iconBox, { backgroundColor: colors.surfaceVariant }]}>
                   <MaterialIcons name="dark-mode" size={20} color={colors.primary} />
                 </View>
                 <Text style={[typography.bodyMedium, { color: colors.text }]}>Tema</Text>
               </View>
-              <Text style={[typography.body, { color: colors.textSecondary }]}>Escuro</Text>
+              <Text style={[typography.body, { color: colors.textSecondary }]}>
+                {themeMode === 'light' ? 'Claro' : themeMode === 'dark' ? 'Escuro' : 'Sistema'}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -159,6 +166,51 @@ export default function SettingsScreen() {
           </Text>
         </View>
       </ScrollView>
+
+      {/* Theme Selection Modal */}
+      {showThemeModal && (
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={() => setShowThemeModal(false)}
+        >
+          <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>Selecionar Tema</Text>
+            
+            {[
+              { label: 'Claro', value: 'light', icon: 'light-mode' },
+              { label: 'Escuro', value: 'dark', icon: 'dark-mode' },
+              { label: 'Sistema', value: 'system', icon: 'settings-brightness' },
+            ].map((item) => (
+              <TouchableOpacity
+                key={item.value}
+                style={styles.modalOption}
+                onPress={() => {
+                  setThemeMode(item.value as any);
+                  setShowThemeModal(false);
+                }}
+              >
+                <View style={styles.rowLeft}>
+                  <MaterialIcons 
+                    name={item.icon as any} 
+                    size={24} 
+                    color={themeMode === item.value ? colors.primary : colors.textSecondary} 
+                  />
+                  <Text style={[
+                    styles.modalOptionText, 
+                    { color: themeMode === item.value ? colors.primary : colors.text }
+                  ]}>
+                    {item.label}
+                  </Text>
+                </View>
+                {themeMode === item.value && (
+                  <MaterialIcons name="check" size={24} color={colors.primary} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 }
@@ -265,5 +317,34 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 2,
     opacity: 0.6,
+  },
+  modalOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    padding: 32,
+    paddingBottom: 48,
+  },
+  modalTitle: {
+    ...typography.subtitle,
+    fontSize: 20,
+    fontWeight: '800',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  modalOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+  },
+  modalOptionText: {
+    ...typography.bodyMedium,
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
