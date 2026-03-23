@@ -21,6 +21,14 @@ class TransactionsService {
       .limit(limit);
   }
 
+  async getById(id: string): Promise<{ data: TransactionWithCategory | null; error: any }> {
+    return await supabase
+      .from('transactions')
+      .select('*, categories(*), accounts(*)')
+      .eq('id', id)
+      .single();
+  }
+
   async getByDateRange(startDate: string, endDate: string): Promise<{ data: TransactionWithCategory[] | null; error: any }> {
     return await supabase
       .from('transactions')

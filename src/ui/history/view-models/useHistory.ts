@@ -3,6 +3,7 @@ import { useTheme } from '@/src/core/theme/theme.hooks';
 import { useHistoryStore } from '@/src/ui/history/stores/history-store';
 import { useDashboardStore } from '@/src/ui/dashboard/stores/dashboard-store';
 import { transactionsRepository } from '@/src/data/repositories/transactions/transactions-repository';
+import { router } from 'expo-router';
 
 export function useHistory() {
   const { colors, isDark } = useTheme();
@@ -167,6 +168,10 @@ export function useHistory() {
     setShowConfirmDelete(false);
   };
 
+  const handleEditPress = (id: string) => {
+    router.push({ pathname: '/(modals)/add-transaction', params: { id } });
+  };
+
   return {
     colors,
     isDark,
@@ -194,6 +199,7 @@ export function useHistory() {
     selectedCategory,
     selectedAccount,
     handleDeletePress,
+    handleEditPress,
     showConfirmDelete,
     setShowConfirmDelete,
     confirmDelete,
