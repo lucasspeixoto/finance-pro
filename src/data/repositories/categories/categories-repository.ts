@@ -9,6 +9,14 @@ class CategoriesRepository {
   async getById(id: string) {
     return await categoriesService.getById(id);
   }
+
+  async delete(id: string) {
+    return await categoriesService.delete(id);
+  }
+
+  async update(id: string, category: Partial<Category>) {
+    return await categoriesService.update(id, category);
+  }
 }
 
 export const categoriesRepository = new CategoriesRepository();

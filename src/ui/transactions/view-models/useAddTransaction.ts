@@ -12,6 +12,7 @@ import { useAlertBoxStore } from '../../../shared/hooks/use-alert-box';
 import { useLoadingStore } from '../../../shared/hooks/use-loading';
 import { useDashboardStore } from '../../dashboard/stores/dashboard-store';
 import { useHistoryStore } from '../../history/stores/history-store';
+import { mapPostgresError } from '@/src/utils/errors';
 
 export function useAddTransaction(id?: string) {
   const { user } = useAuth();
@@ -63,7 +64,7 @@ export function useAddTransaction(id?: string) {
           setSelectedCategoryId(fetchedCategories.find(c => c.type === 'expense')?.id || null);
         }
       } catch (error) {
-        setMessage('Erro ao carregar dados iniciais.\n' + JSON.stringify(error));
+        setMessage('Erro ao carregar dados iniciais.\n' + mapPostgresError(error));
         setIsVisible(true);
       }
     };
@@ -148,7 +149,7 @@ export function useAddTransaction(id?: string) {
       router.back();
 
     } catch (error) {
-      setMessage('Erro ao salvar transação.\n' + JSON.stringify(error));
+      setMessage('Erro ao salvar transação.\n' + mapPostgresError(error));
       setIsVisible(true);
     } finally {
       setIsLoading(false);

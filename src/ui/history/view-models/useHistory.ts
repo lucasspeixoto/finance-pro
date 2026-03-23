@@ -4,6 +4,7 @@ import { useHistoryStore } from '@/src/ui/history/stores/history-store';
 import { useDashboardStore } from '@/src/ui/dashboard/stores/dashboard-store';
 import { transactionsRepository } from '@/src/data/repositories/transactions/transactions-repository';
 import { router } from 'expo-router';
+import { mapPostgresError } from '@/src/utils/errors';
 
 export function useHistory() {
   const { colors, isDark } = useTheme();
@@ -42,7 +43,7 @@ export function useHistory() {
       if (fetchErr) throw fetchErr;
       setTransactions(data || []);
     } catch (err: any) {
-      setError(`Erro ao carregar transações!\n ${JSON.stringify(err)}`);
+      setError(`Erro ao carregar transações!\n ${mapPostgresError(err)}`);
     } finally {
       setLoading(false);
     }
@@ -158,7 +159,7 @@ export function useHistory() {
         // Refresh dashboard data to sync balances and recent transactions
         fetchDashboardData();
       } catch (err: any) {
-        setError(`Erro ao deletar transação!\n ${JSON.stringify(err)}`);
+        setError(`Erro ao deletar transação!\n ${mapPostgresError(err)}`);
       }
     }
   };

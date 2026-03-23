@@ -9,6 +9,14 @@ class CategoriesService {
   async getById(id: string): Promise<{ data: Category | null; error: any }> {
     return await supabase.from('categories').select('*').eq('id', id).single();
   }
+
+  async delete(id: string): Promise<{ error: any }> {
+    return await supabase.from('categories').delete().eq('id', id);
+  }
+
+  async update(id: string, category: Partial<Category>): Promise<{ data: Category | null; error: any }> {
+    return await supabase.from('categories').update(category).eq('id', id).select().single();
+  }
 }
 
 export const categoriesService = new CategoriesService();
