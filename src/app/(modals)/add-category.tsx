@@ -1,8 +1,9 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/src/core/theme/theme.hooks';
 import { typography } from '@/src/core/theme/theme.typography';
 
@@ -10,18 +11,19 @@ export default function AddCategoryScreen() {
   const { colors } = useTheme();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
-          <MaterialIcons name="close" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>Nova Categoria</Text>
-        <View style={{ width: 40 }} />
-      </View>
+    <LinearGradient colors={[colors.backgroundSecondary, colors.backgroundTertiary]} style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]} edges={['top']}>
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: colors.text }]}>Nova Categoria</Text>
+          <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
+            <MaterialIcons name="close" size={24} color={colors.text} />
+          </TouchableOpacity>
+        </View>
       <View style={styles.content}>
         <Text style={{ color: colors.textSecondary }}>Formulário de categoria será implementado aqui.</Text>
       </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
