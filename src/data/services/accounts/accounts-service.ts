@@ -9,6 +9,18 @@ class AccountsService {
   async getById(id: string): Promise<{ data: Account | null; error: any }> {
     return await supabase.from('accounts').select('*').eq('id', id).single();
   }
+
+  async delete(id: string): Promise<{ error: any }> {
+    return await supabase.from('accounts').delete().eq('id', id);
+  }
+
+  async create(account: Omit<Account, 'id' | 'created_at'>): Promise<{ data: Account | null; error: any }> {
+    return await supabase.from('accounts').insert(account).select().single();
+  }
+
+  async update(id: string, account: Partial<Account>): Promise<{ data: Account | null; error: any }> {
+    return await supabase.from('accounts').update(account).eq('id', id).select().single();
+  }
 }
 
 export const accountsService = new AccountsService();

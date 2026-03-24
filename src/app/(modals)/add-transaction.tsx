@@ -4,6 +4,7 @@ import type { MaterialIconName } from '@/src/domain/models/icon/material';
 import { useAddTransaction } from '@/src/ui/transactions/view-models/useAddTransaction';
 import { MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Platform, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -39,14 +40,14 @@ export default function AddTransactionScreen() {
   const availableCategories = categories.filter(c => c.type === type);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+    <LinearGradient colors={[colors.backgroundSecondary, colors.backgroundTertiary]} style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]} edges={['top', 'bottom']}>
       {/* Header */}
       <View style={styles.header}>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{id ? 'Editar Transação' : 'Nova Transação'}</Text>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
           <MaterialIcons name="close" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>{id ? 'Editar Transação' : 'Nova Transação'}</Text>
-        <View style={{ width: 40 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -224,7 +225,8 @@ export default function AddTransactionScreen() {
         </TouchableOpacity>
 
       </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
@@ -262,7 +264,7 @@ const styles = StyleSheet.create({
   },
   valueInputContainer: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
   },
@@ -275,6 +277,8 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     minWidth: 150,
     textAlign: 'center',
+    paddingVertical: 0,
+    includeFontPadding: false,
   },
   typeSelectorContainer: {
     flexDirection: 'row',
