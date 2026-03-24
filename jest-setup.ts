@@ -77,3 +77,40 @@ jest.mock('expo-modules-core', () => ({
   })),
   NativeModulesProxy: {},
 }));
+
+// Mocking Supabase
+jest.mock('@/src/utils/supabase', () => {
+  const mockFrom = {
+    select: jest.fn().mockReturnThis(),
+    insert: jest.fn().mockReturnThis(),
+    update: jest.fn().mockReturnThis(),
+    delete: jest.fn().mockReturnThis(),
+    eq: jest.fn().mockReturnThis(),
+    single: jest.fn().mockReturnThis(),
+    order: jest.fn().mockReturnThis(),
+    limit: jest.fn().mockReturnThis(),
+    match: jest.fn().mockReturnThis(),
+    gte: jest.fn().mockReturnThis(),
+    lte: jest.fn().mockReturnThis(),
+    then: jest.fn().mockImplementation(function(callback) {
+      return Promise.resolve(callback({ data: null, error: null }));
+    }),
+  };
+
+  const mockAuth = {
+    signInWithPassword: jest.fn().mockResolvedValue({ data: {}, error: null }),
+    signOut: jest.fn().mockResolvedValue({ error: null }),
+    getSession: jest.fn().mockResolvedValue({ data: { session: null }, error: null }),
+    onAuthStateChange: jest.fn().mockReturnValue({ data: { subscription: { unsubscribe: jest.fn() } } }),
+    startAutoRefresh: jest.fn(),
+    stopAutoRefresh: jest.fn(),
+    resetPasswordForEmail: jest.fn().mockResolvedValue({ data: {}, error: null }),
+  };
+
+  return {
+    supabase: {
+      from: jest.fn(() => mockFrom),
+      auth: mockAuth,
+    },
+  };
+});
