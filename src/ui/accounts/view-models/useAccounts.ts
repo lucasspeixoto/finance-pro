@@ -24,9 +24,9 @@ export function useAccounts(id?: string) {
   const [color, setColor] = useState('#006239'); // Default emerald
   const [icon, setIcon] = useState('account-balance');
 
-  const fetchAccounts = useCallback(async () => {
+  const fetchAccounts = useCallback(async (showLoading = true) => {
     try {
-      setIsLoading(true);
+      if (showLoading) setIsLoading(true);
       const { data, error } = await accountsRepository.getAll();
       if (error) throw error;
       setAccounts(data || []);
@@ -34,13 +34,13 @@ export function useAccounts(id?: string) {
       setMessage(`Erro ao carregar contas!\n${mapPostgresError(error)}`);
       setIsVisible(true);
     } finally {
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
   }, [setIsLoading, setMessage, setIsVisible]);
 
-  const fetchAccount = useCallback(async (accountId: string) => {
+  const fetchAccount = useCallback(async (accountId: string, showLoading = true) => {
     try {
-      setIsLoading(true);
+      if (showLoading) setIsLoading(true);
       const { data, error } = await accountsRepository.getById(accountId);
       if (error) throw error;
       if (data) {
@@ -54,16 +54,16 @@ export function useAccounts(id?: string) {
       setMessage(`Erro ao carregar conta!\n${mapPostgresError(error)}`);
       setIsVisible(true);
     } finally {
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
   }, [setIsLoading, setMessage, setIsVisible]);
 
   useFocusEffect(
     useCallback(() => {
       if (id) {
-        fetchAccount(id);
+        fetchAccount(id, true); // Keep loading for initial modal open
       } else {
-        fetchAccounts();
+        fetchAccounts(false); // Background refresh for list
       }
     }, [id, fetchAccounts, fetchAccount])
   );
@@ -122,14 +122,14 @@ export function useAccounts(id?: string) {
         if (error) throw error;
       }
 
+      setIsLoading(false);
       fetchDashboardData();
       router.back();
     } catch (error) {
+      setIsLoading(false);
       const action = id ? 'atualizar' : 'criar';
       setMessage(`Erro ao ${action} conta!\n${mapPostgresError(error)}`);
       setIsVisible(true);
-    } finally {
-      setIsLoading(false);
     }
   };
 

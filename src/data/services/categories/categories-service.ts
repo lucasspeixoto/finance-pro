@@ -17,6 +17,10 @@ class CategoriesService {
   async update(id: string, category: Partial<Category>): Promise<{ data: Category | null; error: any }> {
     return await supabase.from('categories').update(category).eq('id', id).select().single();
   }
+
+  async create(category: Omit<Category, 'id' | 'created_at'>): Promise<{ data: Category | null; error: any }> {
+    return await supabase.from('categories').insert(category).select().single();
+  }
 }
 
 export const categoriesService = new CategoriesService();
