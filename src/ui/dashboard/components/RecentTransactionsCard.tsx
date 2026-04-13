@@ -1,11 +1,12 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { typography } from '@/src/core/theme/theme.typography';
+/* eslint-disable max-len */
 import { ThemeColors } from '@/src/core/theme/theme.colors';
-import { TransactionRow } from '@/src/ui/transactions/components/TransactionRow';
-import { formatCurrency } from '@/src/utils/currency';
+import { typography } from '@/src/core/theme/theme.typography';
 import { TransactionWithCategory } from '@/src/data/services/transactions/transactions-service';
 import { MaterialIconName } from '@/src/domain/models/icon/material';
+import { TransactionRow } from '@/src/ui/transactions/components/TransactionRow';
+import { formatCurrency } from '@/src/utils/currency';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface RecentTransactionsCardProps {
   transactions: TransactionWithCategory[];
@@ -13,18 +14,9 @@ interface RecentTransactionsCardProps {
   onSeeAll: () => void;
 }
 
-export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
-  transactions,
-  colors,
-  onSeeAll,
-}) => {
+export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({ transactions, colors, onSeeAll }) => {
   return (
-    <View
-      style={[
-        styles.bentoCard,
-        { backgroundColor: colors.card, borderColor: colors.border },
-      ]}
-    >
+    <View style={[styles.bentoCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
       <View style={styles.cardHeader}>
         <Text style={[styles.cardTitle, { color: colors.text }]}>Transações Recentes</Text>
         <TouchableOpacity onPress={onSeeAll}>
@@ -34,7 +26,7 @@ export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
 
       <View style={styles.transactionsList}>
         {transactions.length > 0 ? (
-          transactions.map(tx => (
+          transactions.map((tx) => (
             <TransactionRow
               key={tx.id}
               icon={(tx.categories?.icon || (tx.type === 'income' ? 'trending-up' : 'receipt')) as MaterialIconName}

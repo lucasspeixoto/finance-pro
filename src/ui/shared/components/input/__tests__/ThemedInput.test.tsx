@@ -8,7 +8,7 @@ jest.mock('@/src/core/theme/theme.hooks');
 
 describe('ThemedInput', () => {
   const mockOnChangeText = jest.fn();
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     (useTheme as jest.Mock).mockReturnValue({
@@ -25,11 +25,7 @@ describe('ThemedInput', () => {
 
   it('should render correctly with label and value', () => {
     const { getByText, getByDisplayValue } = render(
-      <ThemedInput 
-        label="Username" 
-        value="testuser" 
-        onChangeText={mockOnChangeText} 
-      />
+      <ThemedInput label="Username" value="testuser" onChangeText={mockOnChangeText} />,
     );
 
     expect(getByText('USERNAME')).toBeTruthy();
@@ -37,38 +33,23 @@ describe('ThemedInput', () => {
   });
 
   it('should call onChangeText when text changes', () => {
-    const { getByDisplayValue } = render(
-      <ThemedInput 
-        value="testuser" 
-        onChangeText={mockOnChangeText} 
-      />
-    );
+    const { getByDisplayValue } = render(<ThemedInput value="testuser" onChangeText={mockOnChangeText} />);
 
     const input = getByDisplayValue('testuser');
     fireEvent.changeText(input, 'newuser');
-    
+
     expect(mockOnChangeText).toHaveBeenCalledWith('newuser');
   });
 
   it('should render error message when provided', () => {
-    const { getByText } = render(
-      <ThemedInput 
-        value="" 
-        onChangeText={mockOnChangeText} 
-        error="Field is required" 
-      />
-    );
+    const { getByText } = render(<ThemedInput value="" onChangeText={mockOnChangeText} error="Field is required" />);
 
     expect(getByText('Field is required')).toBeTruthy();
   });
 
   it('should render rightElement when provided', () => {
     const { getByTestId } = render(
-      <ThemedInput 
-        value="" 
-        onChangeText={mockOnChangeText} 
-        rightElement={<View testID="right-element" />} 
-      />
+      <ThemedInput value="" onChangeText={mockOnChangeText} rightElement={<View testID="right-element" />} />,
     );
 
     expect(getByTestId('right-element')).toBeTruthy();

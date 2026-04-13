@@ -67,7 +67,9 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
         <TouchableOpacity
           style={[
             styles.filterChip,
-            !selectedCategoryId && !selectedAccountId ? { backgroundColor: colors.primary } : { backgroundColor: colors.surfaceContainer }
+            !selectedCategoryId && !selectedAccountId
+              ? { backgroundColor: colors.primary }
+              : { backgroundColor: colors.surfaceContainer },
           ]}
           onPress={onClearFilters}
         >
@@ -76,46 +78,37 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             size={16}
             color={!selectedCategoryId && !selectedAccountId ? '#FFF' : colors.text}
           />
-          <Text style={[
-            styles.filterText,
-            { color: !selectedCategoryId && !selectedAccountId ? '#FFF' : colors.text }
-          ]}>Todos</Text>
+          <Text
+            style={[styles.filterText, { color: !selectedCategoryId && !selectedAccountId ? '#FFF' : colors.text }]}
+          >
+            Todos
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[
             styles.filterChip,
-            selectedCategoryId ? { backgroundColor: colors.primary } : { backgroundColor: colors.surfaceContainer }
+            selectedCategoryId ? { backgroundColor: colors.primary } : { backgroundColor: colors.surfaceContainer },
           ]}
           onPress={onShowCategoryPicker}
         >
-          <Text style={[
-            styles.filterText,
-            { color: selectedCategoryId ? '#FFF' : colors.text }
-          ]}>{selectedCategoryName || 'Categorias'}</Text>
-          <MaterialIcons
-            name="keyboard-arrow-down"
-            size={16}
-            color={selectedCategoryId ? '#FFF' : colors.text}
-          />
+          <Text style={[styles.filterText, { color: selectedCategoryId ? '#FFF' : colors.text }]}>
+            {selectedCategoryName || 'Categorias'}
+          </Text>
+          <MaterialIcons name="keyboard-arrow-down" size={16} color={selectedCategoryId ? '#FFF' : colors.text} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[
             styles.filterChip,
-            selectedAccountId ? { backgroundColor: colors.primary } : { backgroundColor: colors.surfaceContainer }
+            selectedAccountId ? { backgroundColor: colors.primary } : { backgroundColor: colors.surfaceContainer },
           ]}
           onPress={onShowAccountPicker}
         >
-          <Text style={[
-            styles.filterText,
-            { color: selectedAccountId ? '#FFF' : colors.text }
-          ]}>{selectedAccountName || 'Contas'}</Text>
-          <MaterialIcons
-            name="keyboard-arrow-down"
-            size={16}
-            color={selectedAccountId ? '#FFF' : colors.text}
-          />
+          <Text style={[styles.filterText, { color: selectedAccountId ? '#FFF' : colors.text }]}>
+            {selectedAccountName || 'Contas'}
+          </Text>
+          <MaterialIcons name="keyboard-arrow-down" size={16} color={selectedAccountId ? '#FFF' : colors.text} />
         </TouchableOpacity>
       </View>
     </View>

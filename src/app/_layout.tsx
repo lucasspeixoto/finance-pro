@@ -1,13 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Stack, type ExternalPathString, type RelativePathString } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from '../core/theme/theme.provider';
 import { AlertBox } from '../shared/components/alert-box';
 import { AuthProvider } from '../ui/auth/view-models/useAuth';
 import { LoadingOverlay } from '../ui/shared/components/LoadingOverlay';
-
-type ExpoRouterPath = RelativePathString | ExternalPathString;
 
 const queryClient = new QueryClient();
 

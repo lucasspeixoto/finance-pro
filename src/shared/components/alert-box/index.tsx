@@ -15,20 +15,14 @@ export const AlertBox = () => {
         <Modal transparent visible={isVisible} animationType="fade">
           <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
             <View style={[styles.alertContainer, { backgroundColor: colors.surface }]}>
-              <Text style={[typography.subtitle, styles.title, { color: colors.text }]}>
-                Atenção
-              </Text>
-              <Text style={[typography.body, styles.message, { color: colors.textSecondary }]}>
-                {message}
-              </Text>
+              <Text style={[typography.subtitle, styles.title, { color: colors.text }]}>Atenção</Text>
+              <Text style={[typography.body, styles.message, { color: colors.textSecondary }]}>{message}</Text>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: colors.primary }]}
                 onPress={() => setIsVisible(false)}
                 activeOpacity={0.8}
               >
-                <Text style={[typography.button, { color: colors.background }]}>
-                  OK
-                </Text>
+                <Text style={[typography.button, { color: colors.background }]}>OK</Text>
               </TouchableOpacity>
             </View>
           </View>

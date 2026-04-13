@@ -5,6 +5,7 @@ import type { Account } from '@/src/domain/models/accounts/account.model';
 import type { Category } from '@/src/domain/models/categories/category.model';
 import type { TransactionType } from '@/src/domain/models/transactions/transaction.model';
 import { useAuth } from '@/src/ui/auth/view-models/useAuth';
+import { mapPostgresError } from '@/src/utils/errors';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
@@ -12,7 +13,6 @@ import { useAlertBoxStore } from '../../../shared/hooks/use-alert-box';
 import { useLoadingStore } from '../../../shared/hooks/use-loading';
 import { useDashboardStore } from '../../dashboard/stores/dashboard-store';
 import { useHistoryStore } from '../../history/stores/history-store';
-import { mapPostgresError } from '@/src/utils/errors';
 
 export function useAddTransaction(id?: string) {
   const { user } = useAuth();
@@ -36,10 +36,7 @@ export function useAddTransaction(id?: string) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [catsRes, accsRes] = await Promise.all([
-          categoriesRepository.getAll(),
-          accountsRepository.getAll()
-        ]);
+        const [catsRes, accsRes] = await Promise.all([categoriesRepository.getAll(), accountsRepository.getAll()]);
 
         if (catsRes.error) throw new Error(catsRes.error.message);
         if (accsRes.error) throw new Error(accsRes.error.message);
@@ -61,7 +58,7 @@ export function useAddTransaction(id?: string) {
             setSelectedAccountId(transaction.account_id);
           }
         } else {
-          setSelectedCategoryId(fetchedCategories.find(c => c.type === 'expense')?.id || null);
+          setSelectedCategoryId(fetchedCategories.find((c) => c.type === 'expense')?.id || null);
         }
       } catch (error) {
         setMessage('Erro ao carregar dados iniciais.\n' + mapPostgresError(error));
@@ -71,7 +68,7 @@ export function useAddTransaction(id?: string) {
     fetchData();
   }, []);
 
-  const handleDateChange = (event: any, selectedDate?: Date) => {
+  const handleDateChange = (event: unknown, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setDate(selectedDate);
@@ -124,10 +121,10 @@ export function useAddTransaction(id?: string) {
         description: description || null,
         date: date.toISOString().split('T')[0],
         is_paid: isPaid,
-        notes: null
+        notes: null,
       };
 
-      const { error } = id 
+      const { error } = id
         ? await transactionsRepository.update(id, transactionData)
         : await transactionsRepository.create(transactionData);
 
@@ -135,7 +132,7 @@ export function useAddTransaction(id?: string) {
 
       // Refresh Dashboard Data
       await fetchDashboardData();
-      
+
       // Refresh History Data
       const { data: historyData } = await transactionsRepository.getRecent(100);
       if (historyData) {
@@ -147,7 +144,6 @@ export function useAddTransaction(id?: string) {
 
       // Navigate back
       router.back();
-
     } catch (error) {
       setMessage('Erro ao salvar transação.\n' + mapPostgresError(error));
       setIsVisible(true);
@@ -176,6 +172,6 @@ export function useAddTransaction(id?: string) {
     setSelectedCategoryId,
     selectedAccountId,
     setSelectedAccountId,
-    handleSave
+    handleSave,
   };
 }

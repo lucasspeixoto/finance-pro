@@ -25,8 +25,12 @@ export function TransactionRow({ icon, title, subtitle, amount, amountColor, ico
           <MaterialIcons name={icon} size={24} color={iconColor || defaultIconColor} />
         </View>
         <View style={styles.txTextContainer}>
-          <Text style={[styles.txTitle, { color: colors.text }]} numberOfLines={1}>{title}</Text>
-          <Text style={[styles.txSubtitle, { color: colors.textSecondary }]} numberOfLines={1}>{subtitle}</Text>
+          <Text style={[styles.txTitle, { color: colors.text }]} numberOfLines={1}>
+            {title}
+          </Text>
+          <Text style={[styles.txSubtitle, { color: colors.textSecondary }]} numberOfLines={1}>
+            {subtitle}
+          </Text>
         </View>
       </View>
       <Text style={[styles.txAmount, { color: amountColor }]}>{amount}</Text>
@@ -46,12 +50,9 @@ const styles = StyleSheet.create({
     gap: 2,
     flex: 1,
     marginRight: 2,
-
-
   },
   txTextContainer: {
     flex: 1,
-
   },
   txIconContainer: {
     width: 32,

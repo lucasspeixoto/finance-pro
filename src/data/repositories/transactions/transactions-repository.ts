@@ -1,12 +1,12 @@
 import type { Transaction } from '@/src/domain/models/transactions/transaction.model';
-import { transactionsService, type TransactionWithCategory } from '../../services/transactions/transactions-service';
+import { transactionsService } from '../../services/transactions/transactions-service';
 
 class TransactionsRepository {
   async getAll() {
     return await transactionsService.getAll();
   }
 
-  async getRecent(limit: number = 3) {
+  async getRecent(limit = 3) {
     return await transactionsService.getRecent(limit);
   }
 

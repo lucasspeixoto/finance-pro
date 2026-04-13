@@ -38,7 +38,7 @@ export default function HistoryScreen() {
     handleEditPress,
     showConfirmDelete,
     confirmDelete,
-    cancelDelete
+    cancelDelete,
   } = useHistory();
 
   if (isLoading && filteredTransactions.length === 0) {
@@ -85,9 +85,7 @@ export default function HistoryScreen() {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={[styles.emptyText, { color: colors.textTertiary }]}>
-              Nenhuma transação encontrada.
-            </Text>
+            <Text style={[styles.emptyText, { color: colors.textTertiary }]}>Nenhuma transação encontrada.</Text>
           </View>
         }
       />

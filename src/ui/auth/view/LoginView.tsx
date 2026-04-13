@@ -84,7 +84,10 @@ export const LoginView = () => {
               </View>
             </View>
 
-            <TouchableOpacity style={[styles.loginButton, { backgroundColor: colors.primary }]} onPress={handleSubmit(onSubmit)}>
+            <TouchableOpacity
+              style={[styles.loginButton, { backgroundColor: colors.primary }]}
+              onPress={handleSubmit(onSubmit)}
+            >
               <Text style={[styles.loginButtonText, { color: colors.surface }]}>Entrar</Text>
             </TouchableOpacity>
           </View>

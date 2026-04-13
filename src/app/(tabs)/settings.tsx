@@ -1,5 +1,7 @@
 import { useTheme } from '@/src/core/theme/theme.hooks';
+import type { ThemeMode } from '@/src/core/theme/theme.provider';
 import { typography } from '@/src/core/theme/theme.typography';
+import type { MaterialIconName } from '@/src/domain/models/icon/material';
 import { useAuth } from '@/src/ui/auth/view-models/useAuth';
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -10,12 +12,21 @@ export default function SettingsScreen() {
   const { colors, themeMode, setThemeMode } = useTheme();
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(true);
   const [showThemeModal, setShowThemeModal] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   const handleLogout = async () => {
     await signOut();
   };
+
+  const avatarUri = user?.id
+    ? `https://cumkqrjwsbyotaojeyxv.supabase.co/storage/v1/object/public/avatars/${user?.id}.jpeg`
+    : null;
+
+  const fallbackUri = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    user?.user_metadata?.full_name || user?.email || 'U',
+  )}&background=0D9488&color=fff`;
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
@@ -27,8 +38,9 @@ export default function SettingsScreen() {
               <View style={styles.avatarContainer}>
                 <Image
                   source={{
-                    uri: 'https://cumkqrjwsbyotaojeyxv.supabase.co/storage/v1/object/public/avatars/8fd76563-65b1-47ea-a1a4-931be800ed45.jpeg',
+                    uri: imageError || !avatarUri ? fallbackUri : avatarUri,
                   }}
+                  onError={() => setImageError(true)}
                   style={[styles.avatar, { borderColor: colors.primary + '4D' }]}
                 />
                 <View style={[styles.editBadge, { backgroundColor: colors.primary }]}>
@@ -36,8 +48,10 @@ export default function SettingsScreen() {
                 </View>
               </View>
               <View>
-                <Text style={[typography.subtitle, { color: colors.text, fontSize: 20 }]}>Lucas Peixoto</Text>
-                <Text style={[typography.small, { color: colors.textSecondary }]}>lspeixotodev@gmail.com</Text>
+                <Text style={[typography.subtitle, { color: colors.text, fontSize: 20 }]}>
+                  {user?.user_metadata?.full_name || 'Usuário'}
+                </Text>
+                <Text style={[typography.small, { color: colors.textSecondary }]}>{user?.email || ''}</Text>
               </View>
             </View>
             <TouchableOpacity activeOpacity={0.8}>
@@ -74,11 +88,7 @@ export default function SettingsScreen() {
 
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-            <TouchableOpacity 
-              style={styles.rowItem} 
-              activeOpacity={0.7}
-              onPress={() => setShowThemeModal(true)}
-            >
+            <TouchableOpacity style={styles.rowItem} activeOpacity={0.7} onPress={() => setShowThemeModal(true)}>
               <View style={styles.rowLeft}>
                 <View style={[styles.iconBox, { backgroundColor: colors.surfaceVariant }]}>
                   <MaterialIcons name="dark-mode" size={20} color={colors.primary} />
@@ -169,14 +179,10 @@ export default function SettingsScreen() {
 
       {/* Theme Selection Modal */}
       {showThemeModal && (
-        <TouchableOpacity 
-          style={styles.modalOverlay} 
-          activeOpacity={1} 
-          onPress={() => setShowThemeModal(false)}
-        >
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowThemeModal(false)}>
           <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>Selecionar Tema</Text>
-            
+
             {[
               { label: 'Claro', value: 'light', icon: 'light-mode' },
               { label: 'Escuro', value: 'dark', icon: 'dark-mode' },
@@ -186,26 +192,23 @@ export default function SettingsScreen() {
                 key={item.value}
                 style={styles.modalOption}
                 onPress={() => {
-                  setThemeMode(item.value as any);
+                  setThemeMode(item.value as ThemeMode);
                   setShowThemeModal(false);
                 }}
               >
                 <View style={styles.rowLeft}>
-                  <MaterialIcons 
-                    name={item.icon as any} 
-                    size={24} 
-                    color={themeMode === item.value ? colors.primary : colors.textSecondary} 
+                  <MaterialIcons
+                    name={item.icon as MaterialIconName}
+                    size={24}
+                    color={themeMode === item.value ? colors.primary : colors.textSecondary}
                   />
-                  <Text style={[
-                    styles.modalOptionText, 
-                    { color: themeMode === item.value ? colors.primary : colors.text }
-                  ]}>
+                  <Text
+                    style={[styles.modalOptionText, { color: themeMode === item.value ? colors.primary : colors.text }]}
+                  >
                     {item.label}
                   </Text>
                 </View>
-                {themeMode === item.value && (
-                  <MaterialIcons name="check" size={24} color={colors.primary} />
-                )}
+                {themeMode === item.value && <MaterialIcons name="check" size={24} color={colors.primary} />}
               </TouchableOpacity>
             ))}
           </View>

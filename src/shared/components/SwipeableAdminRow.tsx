@@ -6,10 +6,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import Reanimated, {
-  SharedValue,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import Reanimated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 
 interface SwipeableAdminRowProps {
   icon: MaterialIconName;
@@ -44,7 +41,7 @@ export function SwipeableAdminRow({
 }: SwipeableAdminRowProps) {
   const { colors, isDark } = useTheme();
 
-  const renderLeftActions = (_prog: SharedValue<number>, drag: SharedValue<number>) => {
+  const LeftAction = ({ drag }: { drag: SharedValue<number> }) => {
     const styleAnimation = useAnimatedStyle(() => {
       return {
         transform: [{ translateX: drag.value - 80 }],
@@ -53,17 +50,14 @@ export function SwipeableAdminRow({
 
     return (
       <Reanimated.View style={[styles.leftAction, styleAnimation]}>
-        <RectButton
-          style={[styles.actionButton, { backgroundColor: colors.danger }]}
-          onPress={onDelete}
-        >
+        <RectButton style={[styles.actionButton, { backgroundColor: colors.danger }]} onPress={onDelete}>
           <MaterialIcons name="delete" size={24} color={isDark ? colors.background : colors.surface} />
         </RectButton>
       </Reanimated.View>
     );
   };
 
-  const renderRightActions = (_prog: SharedValue<number>, drag: SharedValue<number>) => {
+  const RightAction = ({ drag }: { drag: SharedValue<number> }) => {
     const styleAnimation = useAnimatedStyle(() => {
       return {
         transform: [{ translateX: drag.value + 80 }],
@@ -72,15 +66,16 @@ export function SwipeableAdminRow({
 
     return (
       <Reanimated.View style={[styles.rightAction, styleAnimation]}>
-        <RectButton
-          style={[styles.actionButton, { backgroundColor: colors.primary }]}
-          onPress={onEdit}
-        >
+        <RectButton style={[styles.actionButton, { backgroundColor: colors.primary }]} onPress={onEdit}>
           <MaterialIcons name="edit" size={24} color={isDark ? colors.onPrimary : colors.surface} />
         </RectButton>
       </Reanimated.View>
     );
   };
+
+  const renderLeftActions = (_prog: SharedValue<number>, drag: SharedValue<number>) => <LeftAction drag={drag} />;
+
+  const renderRightActions = (_prog: SharedValue<number>, drag: SharedValue<number>) => <RightAction drag={drag} />;
 
   return (
     <ReanimatedSwipeable
@@ -93,16 +88,24 @@ export function SwipeableAdminRow({
     >
       <View style={[styles.container, { backgroundColor: colors.surfaceContainer }]}>
         <View style={styles.leftContent}>
-          <View style={[
-            styles.iconContainer,
-            { backgroundColor: iconBackgroundColor || colors.backgroundSecondary },
-            iconBackgroundColor ? { shadowColor: iconBackgroundColor, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 } : {}
-          ]}>
+          <View
+            style={[
+              styles.iconContainer,
+              { backgroundColor: iconBackgroundColor || colors.backgroundSecondary },
+              iconBackgroundColor
+                ? { shadowColor: iconBackgroundColor, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }
+                : {},
+            ]}
+          >
             <MaterialIcons name={icon} size={24} color={iconTintColor || iconColor || colors.primary} />
           </View>
           <View style={styles.textContainer}>
-            <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>{title}</Text>
-            <Text style={[styles.subtitle, { color: colors.textSecondary }]} numberOfLines={1}>{subtitle}</Text>
+            <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
+              {title}
+            </Text>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]} numberOfLines={1}>
+              {subtitle}
+            </Text>
           </View>
         </View>
         <View style={styles.rightContent}>
@@ -111,7 +114,9 @@ export function SwipeableAdminRow({
           )}
           {bottomRightText && (
             <View style={[styles.badge, { backgroundColor: bottomRightBgColor || colors.backgroundSecondary }]}>
-              <Text style={[styles.bottomRight, { color: bottomRightColor || colors.textSecondary }]}>{bottomRightText}</Text>
+              <Text style={[styles.bottomRight, { color: bottomRightColor || colors.textSecondary }]}>
+                {bottomRightText}
+              </Text>
             </View>
           )}
         </View>

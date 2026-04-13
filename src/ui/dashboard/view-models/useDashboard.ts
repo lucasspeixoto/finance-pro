@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useDashboardStore } from '../stores/dashboard-store';
 
 export function useDashboard() {
@@ -11,7 +10,7 @@ export function useDashboard() {
     accounts,
     isLoading,
     error,
-    fetchDashboardData
+    fetchDashboardData,
   } = useDashboardStore();
 
   return {
@@ -23,6 +22,6 @@ export function useDashboard() {
     accounts,
     isLoading,
     error,
-    fetchDashboardData
+    fetchDashboardData,
   };
 }

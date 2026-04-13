@@ -37,194 +37,289 @@ export default function AddTransactionScreen() {
   } = useAddTransaction(id);
 
   // Filter categories based on transaction type
-  const availableCategories = categories.filter(c => c.type === type);
+  const availableCategories = categories.filter((c) => c.type === type);
 
   return (
     <LinearGradient colors={[colors.backgroundSecondary, colors.backgroundTertiary]} style={styles.container}>
       <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]} edges={['top', 'bottom']}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>{id ? 'Editar Transação' : 'Nova Transação'}</Text>
-        <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
-          <MaterialIcons name="close" size={24} color={colors.text} />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Value Input */}
-        <View style={styles.valueSection}>
-          <Text style={[styles.valueLabel, { color: colors.textTertiary }]}>Valor da Transação</Text>
-          <View style={styles.valueInputContainer}>
-            <Text style={[styles.currencySymbol, { color: colors.textTertiary }]}>R$</Text>
-            <TextInput
-              style={[styles.valueInput, { color: colors.text }]}
-              placeholder="0,00"
-              placeholderTextColor={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}
-              value={amountInput}
-              onChangeText={setAmountInput}
-              keyboardType="numeric"
-            />
-          </View>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{id ? 'Editar Transação' : 'Nova Transação'}</Text>
+          <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
+            <MaterialIcons name="close" size={24} color={colors.text} />
+          </TouchableOpacity>
         </View>
 
-        {/* Transaction Type Selector */}
-        <View style={[styles.typeSelectorContainer, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface }]}>
-          {(['expense', 'income', 'transfer'] as const).map((t) => {
-            const isSelected = type === t;
-            const labels = { expense: 'Despesa', income: 'Receita', transfer: 'Transferir' };
-            return (
-              <TouchableOpacity
-                key={t}
-                style={[
-                  styles.typeButton,
-                  isSelected && { backgroundColor: isDark ? colors.primaryContainer : colors.primaryLight, shadowColor: colors.primary },
-                  isSelected && styles.typeButtonSelected
-                ]}
-                onPress={() => setType(t)}
-              >
-                <Text style={[
-                  styles.typeButtonText,
-                  { color: isSelected ? (isDark ? colors.onPrimaryContainer : colors.primary) : colors.textTertiary }
-                ]}>
-                  {labels[t]}
-                </Text>
-              </TouchableOpacity>
-            )
-          })}
-        </View>
-
-        {/* Grid Container */}
-        <View style={styles.formGrid}>
-          {/* Description */}
-          <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
-            <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Descrição</Text>
-            <TextInput
-              style={[styles.cardInput, { color: colors.text }]}
-              placeholder="O que você comprou?"
-              placeholderTextColor={colors.textTertiary}
-              value={description}
-              onChangeText={setDescription}
-            />
-          </View>
-
-          <View style={styles.rowCards}>
-            {/* Date */}
-            <TouchableOpacity
-              style={[styles.card, styles.halfCard, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}
-              onPress={() => setShowDatePicker(true)}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Data</Text>
-              <View style={styles.dateContainer}>
-                <MaterialIcons name="calendar-today" size={20} color={colors.primary} />
-                <Text style={[typography.captionMedium, { color: colors.text, flex: 1, marginLeft: 8 }]}>
-                  {date.toLocaleDateString('pt-BR')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            {showDatePicker && (
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={handleDateChange}
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          {/* Value Input */}
+          <View style={styles.valueSection}>
+            <Text style={[styles.valueLabel, { color: colors.textTertiary }]}>Valor da Transação</Text>
+            <View style={styles.valueInputContainer}>
+              <Text style={[styles.currencySymbol, { color: colors.textTertiary }]}>R$</Text>
+              <TextInput
+                style={[styles.valueInput, { color: colors.text }]}
+                placeholder="0,00"
+                placeholderTextColor={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}
+                value={amountInput}
+                onChangeText={setAmountInput}
+                keyboardType="numeric"
               />
-            )}
-
-            {/* Status */}
-            <View style={[styles.card, styles.halfCard, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
-              <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Status</Text>
-              <View style={styles.statusContainer}>
-                <Text style={[styles.statusText, { color: colors.text }]}>{isPaid ? 'Paga' : 'Pendente'}</Text>
-                <Switch
-                  value={isPaid}
-                  onValueChange={setIsPaid}
-                  trackColor={{ false: colors.border, true: colors.primary }}
-                  thumbColor={isDark ? '#E1E3E3' : '#FFFFFF'}
-                />
-              </View>
             </View>
           </View>
 
-          {/* Category Selector */}
-          {type !== 'transfer' ? (
-            <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
-              <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Categoria</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-                {availableCategories.map(category => {
-                  const isSelected = selectedCategoryId === category.id;
+          {/* Transaction Type Selector */}
+          <View
+            style={[
+              styles.typeSelectorContainer,
+              { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface },
+            ]}
+          >
+            {(['expense', 'income', 'transfer'] as const).map((t) => {
+              const isSelected = type === t;
+              const labels = { expense: 'Despesa', income: 'Receita', transfer: 'Transferir' };
+              return (
+                <TouchableOpacity
+                  key={t}
+                  style={[
+                    styles.typeButton,
+                    isSelected && {
+                      backgroundColor: isDark ? colors.primaryContainer : colors.primaryLight,
+                      shadowColor: colors.primary,
+                    },
+                    isSelected && styles.typeButtonSelected,
+                  ]}
+                  onPress={() => setType(t)}
+                >
+                  <Text
+                    style={[
+                      styles.typeButtonText,
+                      {
+                        color: isSelected ? (isDark ? colors.onPrimaryContainer : colors.primary) : colors.textTertiary,
+                      },
+                    ]}
+                  >
+                    {labels[t]}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          {/* Grid Container */}
+          <View style={styles.formGrid}>
+            {/* Description */}
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
+              <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Descrição</Text>
+              <TextInput
+                style={[styles.cardInput, { color: colors.text }]}
+                placeholder="O que você comprou?"
+                placeholderTextColor={colors.textTertiary}
+                value={description}
+                onChangeText={setDescription}
+              />
+            </View>
+
+            <View style={styles.rowCards}>
+              {/* Date */}
+              <TouchableOpacity
+                style={[
+                  styles.card,
+                  styles.halfCard,
+                  {
+                    backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                    borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                  },
+                ]}
+                onPress={() => setShowDatePicker(true)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Data</Text>
+                <View style={styles.dateContainer}>
+                  <MaterialIcons name="calendar-today" size={20} color={colors.primary} />
+                  <Text style={[typography.captionMedium, { color: colors.text, flex: 1, marginLeft: 8 }]}>
+                    {date.toLocaleDateString('pt-BR')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={handleDateChange}
+                />
+              )}
+
+              {/* Status */}
+              <View
+                style={[
+                  styles.card,
+                  styles.halfCard,
+                  {
+                    backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                    borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                  },
+                ]}
+              >
+                <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Status</Text>
+                <View style={styles.statusContainer}>
+                  <Text style={[styles.statusText, { color: colors.text }]}>{isPaid ? 'Paga' : 'Pendente'}</Text>
+                  <Switch
+                    value={isPaid}
+                    onValueChange={setIsPaid}
+                    trackColor={{ false: colors.border, true: colors.primary }}
+                    thumbColor={isDark ? '#E1E3E3' : '#FFFFFF'}
+                  />
+                </View>
+              </View>
+            </View>
+
+            {/* Category Selector */}
+            {type !== 'transfer' ? (
+              <View
+                style={[
+                  styles.card,
+                  {
+                    backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                    borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                  },
+                ]}
+              >
+                <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Categoria</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.selectorScroll}
+                >
+                  {availableCategories.map((category) => {
+                    const isSelected = selectedCategoryId === category.id;
+                    return (
+                      <TouchableOpacity
+                        key={category.id}
+                        style={styles.selectorItem}
+                        onPress={() => setSelectedCategoryId(category.id)}
+                      >
+                        <View
+                          style={[
+                            styles.iconContainer,
+                            {
+                              backgroundColor: isSelected
+                                ? category.color || colors.primary
+                                : isDark
+                                  ? colors.surfaceContainerHigh
+                                  : '#F0F0F0',
+                            },
+                            isSelected && {
+                              shadowColor: category.color || colors.primary,
+                              shadowOpacity: 0.3,
+                              shadowRadius: 8,
+                              elevation: 5,
+                            },
+                          ]}
+                        >
+                          <MaterialIcons
+                            name={(category.icon as MaterialIconName) || 'category'}
+                            size={24}
+                            color={isSelected ? '#FFFFFF' : colors.textTertiary}
+                          />
+                        </View>
+                        <Text
+                          style={[
+                            styles.selectorText,
+                            {
+                              color: isSelected ? colors.text : colors.textTertiary,
+                              fontWeight: isSelected ? '600' : '400',
+                            },
+                          ]}
+                        >
+                          {category.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            ) : null}
+
+            {/* Account Selector */}
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
+              <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Conta</Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.selectorScroll}
+              >
+                {accounts.map((account) => {
+                  const isSelected = selectedAccountId === account.id;
                   return (
                     <TouchableOpacity
-                      key={category.id}
+                      key={account.id}
                       style={styles.selectorItem}
-                      onPress={() => setSelectedCategoryId(category.id)}
+                      onPress={() => setSelectedAccountId(account.id)}
                     >
-                      <View style={[
-                        styles.iconContainer,
-                        { backgroundColor: isSelected ? category.color || colors.primary : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
-                        isSelected && { shadowColor: category.color || colors.primary, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }
-                      ]}>
+                      <View
+                        style={[
+                          styles.iconContainer,
+                          {
+                            backgroundColor: isSelected
+                              ? account.color || colors.primary
+                              : isDark
+                                ? colors.surfaceContainerHigh
+                                : '#F0F0F0',
+                          },
+                          isSelected && {
+                            shadowColor: account.color || colors.primary,
+                            shadowOpacity: 0.3,
+                            shadowRadius: 8,
+                            elevation: 5,
+                          },
+                        ]}
+                      >
                         <MaterialIcons
-                          name={(category.icon as MaterialIconName) || 'category'}
+                          name={(account.icon as MaterialIconName) || 'account-balance'}
                           size={24}
                           color={isSelected ? '#FFFFFF' : colors.textTertiary}
                         />
                       </View>
-                      <Text style={[
-                        styles.selectorText,
-                        { color: isSelected ? colors.text : colors.textTertiary, fontWeight: isSelected ? '600' : '400' }
-                      ]}>
-                        {category.name}
+                      <Text
+                        style={[
+                          styles.selectorText,
+                          {
+                            color: isSelected ? colors.text : colors.textTertiary,
+                            fontWeight: isSelected ? '600' : '400',
+                          },
+                        ]}
+                      >
+                        {account.name}
                       </Text>
                     </TouchableOpacity>
                   );
                 })}
               </ScrollView>
             </View>
-          ) : null}
-
-          {/* Account Selector */}
-          <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
-            <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Conta</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-              {accounts.map(account => {
-                const isSelected = selectedAccountId === account.id;
-                return (
-                  <TouchableOpacity
-                    key={account.id}
-                    style={styles.selectorItem}
-                    onPress={() => setSelectedAccountId(account.id)}
-                  >
-                    <View style={[
-                      styles.iconContainer,
-                      { backgroundColor: isSelected ? account.color || colors.primary : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
-                      isSelected && { shadowColor: account.color || colors.primary, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }
-                    ]}>
-                      <MaterialIcons
-                        name={(account.icon as MaterialIconName) || "account-balance"}
-                        size={24}
-                        color={isSelected ? '#FFFFFF' : colors.textTertiary}
-                      />
-                    </View>
-                    <Text style={[
-                      styles.selectorText,
-                      { color: isSelected ? colors.text : colors.textTertiary, fontWeight: isSelected ? '600' : '400' }
-                    ]}>
-                      {account.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
           </View>
-        </View>
 
-        {/* Save Button */}
-        <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]} onPress={handleSave}>
-          <Text style={[styles.saveButtonText, { color: isDark ? '#003735' : '#FFFFFF' }]}>Salvar</Text>
-        </TouchableOpacity>
-
-      </ScrollView>
+          {/* Save Button */}
+          <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]} onPress={handleSave}>
+            <Text style={[styles.saveButtonText, { color: isDark ? '#003735' : '#FFFFFF' }]}>Salvar</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );

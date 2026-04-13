@@ -55,12 +55,7 @@ const ThemedDropdown: React.FC<ThemedDropdownProps> = ({
           },
         ]}
       >
-        <Text
-          style={[
-            styles.inputText,
-            { color: selectedOption ? colors.text : colors.textTertiary }
-          ]}
-        >
+        <Text style={[styles.inputText, { color: selectedOption ? colors.text : colors.textTertiary }]}>
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
 

@@ -2,18 +2,19 @@ import type { Account } from '@/src/domain/models/accounts/account.model';
 import type { Category } from '@/src/domain/models/categories/category.model';
 import type { Transaction } from '@/src/domain/models/transactions/transaction.model';
 import { supabase } from '@/src/utils/supabase';
+import type { PostgrestError } from '@supabase/supabase-js';
 
-export type TransactionWithCategory = Transaction & { 
+export type TransactionWithCategory = Transaction & {
   categories: Category | null;
   accounts: Account | null;
 };
 
 class TransactionsService {
-  async getAll(): Promise<{ data: Transaction[] | null; error: any }> {
+  async getAll(): Promise<{ data: Transaction[] | null; error: PostgrestError | null }> {
     return await supabase.from('transactions').select('*').order('date', { ascending: false });
   }
 
-  async getRecent(limit: number): Promise<{ data: TransactionWithCategory[] | null; error: any }> {
+  async getRecent(limit: number): Promise<{ data: TransactionWithCategory[] | null; error: PostgrestError | null }> {
     return await supabase
       .from('transactions')
       .select('*, categories(*), accounts(*)')
@@ -21,15 +22,14 @@ class TransactionsService {
       .limit(limit);
   }
 
-  async getById(id: string): Promise<{ data: TransactionWithCategory | null; error: any }> {
-    return await supabase
-      .from('transactions')
-      .select('*, categories(*), accounts(*)')
-      .eq('id', id)
-      .single();
+  async getById(id: string): Promise<{ data: TransactionWithCategory | null; error: PostgrestError | null }> {
+    return await supabase.from('transactions').select('*, categories(*), accounts(*)').eq('id', id).single();
   }
 
-  async getByDateRange(startDate: string, endDate: string): Promise<{ data: TransactionWithCategory[] | null; error: any }> {
+  async getByDateRange(
+    startDate: string,
+    endDate: string,
+  ): Promise<{ data: TransactionWithCategory[] | null; error: PostgrestError | null }> {
     return await supabase
       .from('transactions')
       .select('*, categories(*), accounts(*)')
@@ -38,28 +38,21 @@ class TransactionsService {
       .order('date', { ascending: false });
   }
 
-  async create(transaction: Omit<Transaction, 'id' | 'created_at'>): Promise<{ data: Transaction | null; error: any }> {
-    return await supabase
-      .from('transactions')
-      .insert([transaction])
-      .select()
-      .single();
+  async create(
+    transaction: Omit<Transaction, 'id' | 'created_at'>,
+  ): Promise<{ data: Transaction | null; error: PostgrestError | null }> {
+    return await supabase.from('transactions').insert([transaction]).select().single();
   }
 
-  async update(id: string, transaction: Partial<Transaction>): Promise<{ data: Transaction | null; error: any }> {
-    return await supabase
-      .from('transactions')
-      .update(transaction)
-      .eq('id', id)
-      .select()
-      .single();
+  async update(
+    id: string,
+    transaction: Partial<Transaction>,
+  ): Promise<{ data: Transaction | null; error: PostgrestError | null }> {
+    return await supabase.from('transactions').update(transaction).eq('id', id).select().single();
   }
 
-  async delete(id: string): Promise<{ error: any }> {
-    return await supabase
-      .from('transactions')
-      .delete()
-      .eq('id', id);
+  async delete(id: string): Promise<{ error: PostgrestError | null }> {
+    return await supabase.from('transactions').delete().eq('id', id);
   }
 }
 

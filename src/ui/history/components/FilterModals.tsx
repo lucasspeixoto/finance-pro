@@ -1,19 +1,21 @@
+import type { Account } from '@/src/domain/models/accounts/account.model';
+import type { Category } from '@/src/domain/models/categories/category.model';
+import { ThemeColors } from '@/src/core/theme/theme.colors';
+import { typography } from '@/src/core/theme/theme.typography';
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { typography } from '@/src/core/theme/theme.typography';
-import { ThemeColors } from '@/src/core/theme/theme.colors';
 
 interface FilterModalsProps {
   colors: ThemeColors;
   showCategoryPicker: boolean;
   onCloseCategoryPicker: () => void;
-  categories: any[];
+  categories: Category[];
   selectedCategoryId: string | null;
   onSelectCategory: (id: string | null) => void;
   showAccountPicker: boolean;
   onCloseAccountPicker: () => void;
-  accounts: any[];
+  accounts: Account[];
   selectedAccountId: string | null;
   onSelectAccount: (id: string | null) => void;
 }
@@ -45,12 +47,12 @@ export const FilterModals: React.FC<FilterModalsProps> = ({
             </View>
             <FlatList
               data={categories}
-              keyExtractor={item => item.id}
+              keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
                     styles.modalItem,
-                    selectedCategoryId === item.id && { backgroundColor: colors.surfaceContainerHigh }
+                    selectedCategoryId === item.id && { backgroundColor: colors.surfaceContainerHigh },
                   ]}
                   onPress={() => {
                     onSelectCategory(selectedCategoryId === item.id ? null : item.id);
@@ -58,9 +60,7 @@ export const FilterModals: React.FC<FilterModalsProps> = ({
                   }}
                 >
                   <Text style={[styles.modalItemText, { color: colors.text }]}>{item.name}</Text>
-                  {selectedCategoryId === item.id && (
-                    <MaterialIcons name="check" size={20} color={colors.primary} />
-                  )}
+                  {selectedCategoryId === item.id && <MaterialIcons name="check" size={20} color={colors.primary} />}
                 </TouchableOpacity>
               )}
             />
@@ -80,12 +80,12 @@ export const FilterModals: React.FC<FilterModalsProps> = ({
             </View>
             <FlatList
               data={accounts}
-              keyExtractor={item => item.id}
+              keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
                     styles.modalItem,
-                    selectedAccountId === item.id && { backgroundColor: colors.surfaceContainerHigh }
+                    selectedAccountId === item.id && { backgroundColor: colors.surfaceContainerHigh },
                   ]}
                   onPress={() => {
                     onSelectAccount(selectedAccountId === item.id ? null : item.id);
@@ -93,9 +93,7 @@ export const FilterModals: React.FC<FilterModalsProps> = ({
                   }}
                 >
                   <Text style={[styles.modalItemText, { color: colors.text }]}>{item.name}</Text>
-                  {selectedAccountId === item.id && (
-                    <MaterialIcons name="check" size={20} color={colors.primary} />
-                  )}
+                  {selectedAccountId === item.id && <MaterialIcons name="check" size={20} color={colors.primary} />}
                 </TouchableOpacity>
               )}
             />

@@ -35,7 +35,7 @@ const PREDEFINED_COLORS = [
 export default function AddAccountScreen() {
   const { colors, isDark } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  
+
   const {
     name,
     setName,
@@ -81,7 +81,15 @@ export default function AddAccountScreen() {
           {/* Form Fields */}
           <View style={styles.formGrid}>
             {/* Account Name */}
-            <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
               <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Nome da Conta</Text>
               <TextInput
                 style={[styles.cardInput, { color: colors.text }]}
@@ -93,32 +101,58 @@ export default function AddAccountScreen() {
             </View>
 
             {/* Account Type Selector */}
-            <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
               <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Tipo de Conta</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-                {ACCOUNT_TYPES.map(item => {
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.selectorScroll}
+              >
+                {ACCOUNT_TYPES.map((item) => {
                   const isSelected = type === item.type;
                   return (
-                    <TouchableOpacity
-                      key={item.type}
-                      style={styles.selectorItem}
-                      onPress={() => setType(item.type)}
-                    >
-                      <View style={[
-                        styles.iconWrapper,
-                        { backgroundColor: isSelected ? colors.primary : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
-                        isSelected && { shadowColor: colors.primary, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }
-                      ]}>
+                    <TouchableOpacity key={item.type} style={styles.selectorItem} onPress={() => setType(item.type)}>
+                      <View
+                        style={[
+                          styles.iconWrapper,
+                          {
+                            backgroundColor: isSelected
+                              ? colors.primary
+                              : isDark
+                                ? colors.surfaceContainerHigh
+                                : '#F0F0F0',
+                          },
+                          isSelected && {
+                            shadowColor: colors.primary,
+                            shadowOpacity: 0.3,
+                            shadowRadius: 8,
+                            elevation: 5,
+                          },
+                        ]}
+                      >
                         <MaterialIcons
                           name={item.icon}
                           size={24}
                           color={isSelected ? '#FFFFFF' : colors.textTertiary}
                         />
                       </View>
-                      <Text style={[
-                        styles.selectorText,
-                        { color: isSelected ? colors.text : colors.textTertiary, fontWeight: isSelected ? '600' : '400' }
-                      ]}>
+                      <Text
+                        style={[
+                          styles.selectorText,
+                          {
+                            color: isSelected ? colors.text : colors.textTertiary,
+                            fontWeight: isSelected ? '600' : '400',
+                          },
+                        ]}
+                      >
                         {item.label}
                       </Text>
                     </TouchableOpacity>
@@ -128,10 +162,22 @@ export default function AddAccountScreen() {
             </View>
 
             {/* Color Selector */}
-            <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
               <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Cor</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-                {PREDEFINED_COLORS.map(c => {
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.selectorScroll}
+              >
+                {PREDEFINED_COLORS.map((c) => {
                   const isSelected = color === c;
                   return (
                     <TouchableOpacity
@@ -139,7 +185,7 @@ export default function AddAccountScreen() {
                       style={[
                         styles.colorCircle,
                         { backgroundColor: c },
-                        isSelected && { borderWidth: 3, borderColor: colors.text }
+                        isSelected && { borderWidth: 3, borderColor: colors.text },
                       ]}
                       onPress={() => setColor(c)}
                     />
@@ -149,21 +195,31 @@ export default function AddAccountScreen() {
             </View>
 
             {/* Icon Selector */}
-            <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
               <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Ícone</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-                {materialAccountIcons.map(iconName => {
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.selectorScroll}
+              >
+                {materialAccountIcons.map((iconName) => {
                   const isSelected = icon === iconName;
                   return (
-                    <TouchableOpacity
-                      key={iconName}
-                      style={styles.selectorItem}
-                      onPress={() => setIcon(iconName)}
-                    >
-                      <View style={[
-                        styles.iconWrapper,
-                        { backgroundColor: isSelected ? color : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
-                      ]}>
+                    <TouchableOpacity key={iconName} style={styles.selectorItem} onPress={() => setIcon(iconName)}>
+                      <View
+                        style={[
+                          styles.iconWrapper,
+                          { backgroundColor: isSelected ? color : isDark ? colors.surfaceContainerHigh : '#F0F0F0' },
+                        ]}
+                      >
                         <MaterialIcons
                           name={iconName as MaterialIconName}
                           size={24}
@@ -178,7 +234,10 @@ export default function AddAccountScreen() {
           </View>
 
           {/* Save Button */}
-          <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]} onPress={handleSaveAccount}>
+          <TouchableOpacity
+            style={[styles.saveButton, { backgroundColor: colors.primary }]}
+            onPress={handleSaveAccount}
+          >
             <Text style={[styles.saveButtonText, { color: isDark ? '#003735' : '#FFFFFF' }]}>Salvar</Text>
           </TouchableOpacity>
         </ScrollView>

@@ -38,18 +38,13 @@ const ThemedInput: React.FC<ThemedInputProps> = ({
           {
             backgroundColor: colors.surfaceVariant,
             borderColor: error ? colors.danger : colors.border,
-            borderWidth: 1
+            borderWidth: 1,
           },
           multiline && styles.multilineContainer,
         ]}
       >
         <TextInput
-          style={[
-            styles.input,
-            { color: colors.text },
-            multiline && styles.multilineInput,
-            style,
-          ]}
+          style={[styles.input, { color: colors.text }, multiline && styles.multilineInput, style]}
           placeholder={placeholder}
           placeholderTextColor={colors.textTertiary}
           keyboardType={keyboardType}
@@ -62,18 +57,10 @@ const ThemedInput: React.FC<ThemedInputProps> = ({
           textAlignVertical={multiline ? 'top' : 'center'}
           {...rest}
         />
-        {rightElement ? (
-          <View style={styles.rightElementContainer}>
-            {rightElement}
-          </View>
-        ) : null}
+        {rightElement ? <View style={styles.rightElementContainer}>{rightElement}</View> : null}
       </View>
 
-      {error ? (
-        <Text style={[styles.errorText, { color: colors.danger }]}>
-          {error}
-        </Text>
-      ) : null}
+      {error ? <Text style={[styles.errorText, { color: colors.danger }]}>{error}</Text> : null}
     </View>
   );
 };

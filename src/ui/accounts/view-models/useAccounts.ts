@@ -4,7 +4,7 @@ import { useAlertBoxStore } from '@/src/shared/hooks/use-alert-box';
 import { useLoadingStore } from '@/src/shared/hooks/use-loading';
 import { useDashboardStore } from '@/src/ui/dashboard/stores/dashboard-store';
 import { router } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { mapPostgresError } from '@/src/utils/errors';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -24,39 +24,45 @@ export function useAccounts(id?: string) {
   const [color, setColor] = useState('#006239'); // Default emerald
   const [icon, setIcon] = useState('account-balance');
 
-  const fetchAccounts = useCallback(async (showLoading = true) => {
-    try {
-      if (showLoading) setIsLoading(true);
-      const { data, error } = await accountsRepository.getAll();
-      if (error) throw error;
-      setAccounts(data || []);
-    } catch (error) {
-      setMessage(`Erro ao carregar contas!\n${mapPostgresError(error)}`);
-      setIsVisible(true);
-    } finally {
-      if (showLoading) setIsLoading(false);
-    }
-  }, [setIsLoading, setMessage, setIsVisible]);
-
-  const fetchAccount = useCallback(async (accountId: string, showLoading = true) => {
-    try {
-      if (showLoading) setIsLoading(true);
-      const { data, error } = await accountsRepository.getById(accountId);
-      if (error) throw error;
-      if (data) {
-        setName(data.name);
-        setType(data.type);
-        setAmountInput(data.balance.toString());
-        setColor(data.color || '#006239');
-        setIcon(data.icon || 'account-balance');
+  const fetchAccounts = useCallback(
+    async (showLoading = true) => {
+      try {
+        if (showLoading) setIsLoading(true);
+        const { data, error } = await accountsRepository.getAll();
+        if (error) throw error;
+        setAccounts(data || []);
+      } catch (error) {
+        setMessage(`Erro ao carregar contas!\n${mapPostgresError(error)}`);
+        setIsVisible(true);
+      } finally {
+        if (showLoading) setIsLoading(false);
       }
-    } catch (error) {
-      setMessage(`Erro ao carregar conta!\n${mapPostgresError(error)}`);
-      setIsVisible(true);
-    } finally {
-      if (showLoading) setIsLoading(false);
-    }
-  }, [setIsLoading, setMessage, setIsVisible]);
+    },
+    [setIsLoading, setMessage, setIsVisible],
+  );
+
+  const fetchAccount = useCallback(
+    async (accountId: string, showLoading = true) => {
+      try {
+        if (showLoading) setIsLoading(true);
+        const { data, error } = await accountsRepository.getById(accountId);
+        if (error) throw error;
+        if (data) {
+          setName(data.name);
+          setType(data.type);
+          setAmountInput(data.balance.toString());
+          setColor(data.color || '#006239');
+          setIcon(data.icon || 'account-balance');
+        }
+      } catch (error) {
+        setMessage(`Erro ao carregar conta!\n${mapPostgresError(error)}`);
+        setIsVisible(true);
+      } finally {
+        if (showLoading) setIsLoading(false);
+      }
+    },
+    [setIsLoading, setMessage, setIsVisible],
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -65,7 +71,7 @@ export function useAccounts(id?: string) {
       } else {
         fetchAccounts(false); // Background refresh for list
       }
-    }, [id, fetchAccounts, fetchAccount])
+    }, [id, fetchAccounts, fetchAccount]),
   );
 
   const sortedAccounts = useMemo(() => {
@@ -77,8 +83,8 @@ export function useAccounts(id?: string) {
       setIsLoading(true);
       const { error } = await accountsRepository.delete(idToDelete);
       if (error) throw error;
-      
-      setAccounts(prev => prev.filter(a => a.id !== idToDelete));
+
+      setAccounts((prev) => prev.filter((a) => a.id !== idToDelete));
       fetchDashboardData(); // Sync dashboard
     } catch (error) {
       setMessage(`Erro ao excluir conta!\n${mapPostgresError(error)}`);

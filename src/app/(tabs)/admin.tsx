@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -14,20 +15,10 @@ import { formatCurrency } from '@/src/utils/currency';
 
 export default function AdminScreen() {
   const { colors } = useTheme();
-  const {
-    accounts,
-    deleteAccount,
-    handleEditAccount,
-    handleAddAccount
-  } = useAccounts();
-  const {
-    categories,
-    deleteCategory,
-    handleEditCategory,
-    handleAddCategory
-  } = useCategories();
+  const { accounts, deleteAccount, handleEditAccount, handleAddAccount } = useAccounts();
+  const { categories, deleteCategory, handleEditCategory, handleAddCategory } = useCategories();
 
-  const [confirmDelete, setConfirmDelete] = useState<{ id: string, type: 'account' | 'category' } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; type: 'account' | 'category' } | null>(null);
 
   const handleDeletePress = (id: string, type: 'account' | 'category') => {
     setConfirmDelete({ id, type });

@@ -32,18 +32,8 @@ const PREDEFINED_COLORS = [
 export default function AddCategoryScreen() {
   const { colors, isDark } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  
-  const {
-    name,
-    setName,
-    type,
-    setType,
-    color,
-    setColor,
-    icon,
-    setIcon,
-    handleSaveCategory,
-  } = useCategories(id);
+
+  const { name, setName, type, setType, color, setColor, icon, setIcon, handleSaveCategory } = useCategories(id);
 
   return (
     <LinearGradient colors={[colors.backgroundSecondary, colors.backgroundTertiary]} style={styles.container}>
@@ -73,30 +63,52 @@ export default function AddCategoryScreen() {
           {/* Form Fields */}
           <View style={styles.formGrid}>
             {/* Category Type Selector */}
-            <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
               <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Tipo</Text>
               <View style={styles.typeSelector}>
-                {CATEGORY_TYPES.map(item => {
+                {CATEGORY_TYPES.map((item) => {
                   const isSelected = type === item.type;
                   return (
                     <TouchableOpacity
                       key={item.type}
                       style={[
                         styles.typeItem,
-                        { backgroundColor: isSelected ? (item.type === 'expense' ? colors.tertiary : colors.primary) : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
-                        isSelected && { shadowColor: item.type === 'expense' ? colors.tertiary : colors.primary, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 }
+                        {
+                          backgroundColor: isSelected
+                            ? item.type === 'expense'
+                              ? colors.tertiary
+                              : colors.primary
+                            : isDark
+                              ? colors.surfaceContainerHigh
+                              : '#F0F0F0',
+                        },
+                        isSelected && {
+                          shadowColor: item.type === 'expense' ? colors.tertiary : colors.primary,
+                          shadowOpacity: 0.3,
+                          shadowRadius: 8,
+                          elevation: 4,
+                        },
                       ]}
                       onPress={() => setType(item.type)}
                     >
-                      <MaterialIcons
-                        name={item.icon}
-                        size={20}
-                        color={isSelected ? '#FFFFFF' : colors.textTertiary}
-                      />
-                      <Text style={[
-                        styles.typeText,
-                        { color: isSelected ? '#FFFFFF' : colors.textTertiary, fontWeight: isSelected ? '700' : '500' }
-                      ]}>
+                      <MaterialIcons name={item.icon} size={20} color={isSelected ? '#FFFFFF' : colors.textTertiary} />
+                      <Text
+                        style={[
+                          styles.typeText,
+                          {
+                            color: isSelected ? '#FFFFFF' : colors.textTertiary,
+                            fontWeight: isSelected ? '700' : '500',
+                          },
+                        ]}
+                      >
                         {item.label}
                       </Text>
                     </TouchableOpacity>
@@ -106,10 +118,22 @@ export default function AddCategoryScreen() {
             </View>
 
             {/* Color Selector */}
-            <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
               <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Cor Personalizada</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-                {PREDEFINED_COLORS.map(c => {
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.selectorScroll}
+              >
+                {PREDEFINED_COLORS.map((c) => {
                   const isSelected = color === c;
                   return (
                     <TouchableOpacity
@@ -117,7 +141,7 @@ export default function AddCategoryScreen() {
                       style={[
                         styles.colorCircle,
                         { backgroundColor: c },
-                        isSelected && { borderWidth: 3, borderColor: isDark ? '#FFFFFF' : colors.text }
+                        isSelected && { borderWidth: 3, borderColor: isDark ? '#FFFFFF' : colors.text },
                       ]}
                       onPress={() => setColor(c)}
                     />
@@ -127,17 +151,29 @@ export default function AddCategoryScreen() {
             </View>
 
             {/* Icon Selector */}
-            <View style={[styles.card, { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface, borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)' }]}>
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface,
+                  borderColor: isDark ? colors.border : 'rgba(0,0,0,0.05)',
+                },
+              ]}
+            >
               <Text style={[styles.cardLabel, { color: colors.textTertiary }]}>Ícone representativo</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorScroll}>
-                {materialCategoryIcons.map(iconName => {
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.selectorScroll}
+              >
+                {materialCategoryIcons.map((iconName) => {
                   const isSelected = icon === iconName;
                   return (
                     <TouchableOpacity
                       key={iconName}
                       style={[
                         styles.iconItem,
-                        { backgroundColor: isSelected ? color : (isDark ? colors.surfaceContainerHigh : '#F0F0F0') },
+                        { backgroundColor: isSelected ? color : isDark ? colors.surfaceContainerHigh : '#F0F0F0' },
                       ]}
                       onPress={() => setIcon(iconName)}
                     >
@@ -154,7 +190,10 @@ export default function AddCategoryScreen() {
           </View>
 
           {/* Save Button */}
-          <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]} onPress={handleSaveCategory}>
+          <TouchableOpacity
+            style={[styles.saveButton, { backgroundColor: colors.primary }]}
+            onPress={handleSaveCategory}
+          >
             <Text style={[styles.saveButtonText, { color: isDark ? '#003735' : '#FFFFFF' }]}>
               {id ? 'Confirmar Alterações' : 'Criar Categoria'}
             </Text>

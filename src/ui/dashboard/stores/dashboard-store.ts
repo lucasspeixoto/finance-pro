@@ -36,16 +36,17 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   isLoading: false,
   error: null,
 
-  reset: () => set({
-    totalBalance: 0,
-    monthlyIncome: 0,
-    monthlyExpense: 0,
-    topCategories: [],
-    recentTransactions: [],
-    accounts: [],
-    isLoading: false,
-    error: null,
-  }),
+  reset: () =>
+    set({
+      totalBalance: 0,
+      monthlyIncome: 0,
+      monthlyExpense: 0,
+      topCategories: [],
+      recentTransactions: [],
+      accounts: [],
+      isLoading: false,
+      error: null,
+    }),
 
   fetchDashboardData: async () => {
     try {
@@ -62,7 +63,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       const [accountsRes, monthlyTxRes, recentTxRes] = await Promise.all([
         accountsRepository.getAll(),
         transactionsRepository.getByDateRange(startOfMonthStr, endOfMonthStr),
-        transactionsRepository.getRecent(3)
+        transactionsRepository.getRecent(3),
       ]);
 
       if (accountsRes.error) throw new Error(accountsRes.error.message || 'Error fetching accounts');
@@ -75,16 +76,20 @@ export const useDashboardStore = create<DashboardState>((set) => ({
 
       // 2. Monthly Income & Expense
       const monthlyTxs = monthlyTxRes.data || [];
-      const income = monthlyTxs.filter(tx => tx.type === 'income').reduce((acc, tx) => acc + Number(tx.amount), 0);
-      const expense = monthlyTxs.filter(tx => tx.type === 'expense').reduce((acc, tx) => acc + Number(tx.amount), 0);
+      const income = monthlyTxs.filter((tx) => tx.type === 'income').reduce((acc, tx) => acc + Number(tx.amount), 0);
+      const expense = monthlyTxs.filter((tx) => tx.type === 'expense').reduce((acc, tx) => acc + Number(tx.amount), 0);
 
       // 3. Top 2 Categories by Expense
-      const expenseTxs = monthlyTxs.filter(tx => tx.type === 'expense' && tx.category_id);
-      const categoryMap = new Map<string, { name: string, amount: number, color?: string }>();
+      const expenseTxs = monthlyTxs.filter((tx) => tx.type === 'expense' && tx.category_id);
+      const categoryMap = new Map<string, { name: string; amount: number; color?: string }>();
 
       for (const tx of expenseTxs) {
         if (!tx.category_id || !tx.categories) continue;
-        const existing = categoryMap.get(tx.category_id) || { name: tx.categories.name, amount: 0, color: tx.categories.color ?? undefined };
+        const existing = categoryMap.get(tx.category_id) || {
+          name: tx.categories.name,
+          amount: 0,
+          color: tx.categories.color ?? undefined,
+        };
         existing.amount += Number(tx.amount);
         categoryMap.set(tx.category_id, existing);
       }
@@ -97,7 +102,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
           name: data.name,
           amount: data.amount,
           percentage: totalExpensesForCategories > 0 ? Math.round((data.amount / totalExpensesForCategories) * 100) : 0,
-          color: data.color
+          color: data.color,
         }))
         .sort((a, b) => b.amount - a.amount)
         .slice(0, 3);
@@ -109,9 +114,8 @@ export const useDashboardStore = create<DashboardState>((set) => ({
         topCategories: sortedCategories,
         recentTransactions: recentTxRes.data || [],
         accounts: fetchedAccounts,
-        isLoading: false
+        isLoading: false,
       });
-
     } catch (error) {
       set({ error: `Error loading dashboard data.\n${JSON.stringify(error)}`, isLoading: false });
     }

@@ -9,7 +9,7 @@ jest.mock('@/src/core/theme/theme.hooks');
 
 describe('AlertBox', () => {
   const mockSetIsVisible = jest.fn();
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     (useTheme as jest.Mock).mockReturnValue({
@@ -56,7 +56,7 @@ describe('AlertBox', () => {
 
     const { getByText } = render(<AlertBox />);
     const okButton = getByText('OK');
-    
+
     fireEvent.press(okButton);
     expect(mockSetIsVisible).toHaveBeenCalledWith(false);
   });

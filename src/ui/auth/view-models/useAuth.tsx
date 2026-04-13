@@ -2,7 +2,7 @@ import { authRepository } from '@/src/data/repositories/auth/auth-repository';
 import messages from '@/src/shared/constants/messages';
 import { useAlertBoxStore } from '@/src/shared/hooks/use-alert-box';
 import { useLoadingStore } from '@/src/shared/hooks/use-loading';
-import { Session, User } from '@supabase/supabase-js';
+import { Session, User, AuthError, Subscription } from '@supabase/supabase-js';
 import * as Network from 'expo-network';
 import { router } from 'expo-router';
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           router.replace('/(auth)/login');
         }
-      } catch (error) {
+      } catch {
         setMessage('Erro ao verificar sessão. Tente novamente.');
         setIsVisible(true);
       } finally {
@@ -56,14 +56,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     checkNetworkAndSession();
 
-    let subscription: any;
+    let subscription: { subscription: Subscription } | null = null;
+
     try {
       const { data } = authRepository.onAuthStateChange((newSession) => {
         setSession(newSession);
       });
       subscription = data;
-    } catch (error: any) {
-      console.error('Error on auth state change listener:', error);
+    } catch (error) {
+      console.error('Error on auth state change listener:', JSON.stringify(error));
     }
 
     return () => {
@@ -78,7 +79,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { error } = await authRepository.signIn(email, password);
 
     if (error) {
-      const message = messages[error?.status as number] as string;
+      const authError = error as AuthError;
+      const message = messages[authError?.status as number] as string;
 
       setMessage(message);
       setIsVisible(true);
@@ -94,7 +96,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { error } = await authRepository.signOut();
 
     if (error) {
-      const message = messages[error.status as number] as string;
+      const authError = error as AuthError;
+      const message = messages[authError.status as number] as string;
       setMessage(message);
       setIsVisible(true);
     }

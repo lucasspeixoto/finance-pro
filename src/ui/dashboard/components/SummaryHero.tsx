@@ -31,9 +31,7 @@ export const SummaryHero: React.FC<SummaryHeroProps> = ({
         <Text style={[styles.heroLabel, { color: isDark ? colors.onPrimaryContainer : colors.textSecondary }]}>
           Patrimônio Total
         </Text>
-        <Text style={[styles.heroBalance, { color: colors.primary }]}>
-          {formatCurrency(totalBalance)}
-        </Text>
+        <Text style={[styles.heroBalance, { color: colors.primary }]}>{formatCurrency(totalBalance)}</Text>
 
         <View style={styles.heroStatsContainer}>
           <View
@@ -43,9 +41,7 @@ export const SummaryHero: React.FC<SummaryHeroProps> = ({
             ]}
           >
             <Text style={[styles.statLabel, { color: colors.textTertiary }]}>Receita Mensal</Text>
-            <Text style={[styles.statValue, { color: colors.success }]}>
-              + {formatCurrency(monthlyIncome)}
-            </Text>
+            <Text style={[styles.statValue, { color: colors.success }]}>+ {formatCurrency(monthlyIncome)}</Text>
           </View>
           <View
             style={[
@@ -54,9 +50,7 @@ export const SummaryHero: React.FC<SummaryHeroProps> = ({
             ]}
           >
             <Text style={[styles.statLabel, { color: colors.textTertiary }]}>Despesa Mensal</Text>
-            <Text style={[styles.statValue, { color: colors.tertiary }]}>
-              - {formatCurrency(monthlyExpense)}
-            </Text>
+            <Text style={[styles.statValue, { color: colors.tertiary }]}>- {formatCurrency(monthlyExpense)}</Text>
           </View>
         </View>
       </View>

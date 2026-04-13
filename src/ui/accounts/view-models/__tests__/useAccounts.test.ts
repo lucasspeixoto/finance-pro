@@ -1,11 +1,12 @@
-import { renderHook, act } from '@testing-library/react-native';
-import { useAccounts } from '../useAccounts';
+/* eslint-disable prettier/prettier */
 import { accountsRepository } from '@/src/data/repositories/accounts/accounts-repository';
-import { useAuth } from '@/src/ui/auth/view-models/useAuth';
-import { useLoadingStore } from '@/src/shared/hooks/use-loading';
 import { useAlertBoxStore } from '@/src/shared/hooks/use-alert-box';
+import { useLoadingStore } from '@/src/shared/hooks/use-loading';
+import { useAuth } from '@/src/ui/auth/view-models/useAuth';
 import { useDashboardStore } from '@/src/ui/dashboard/stores/dashboard-store';
+import { act, renderHook } from '@testing-library/react-native';
 import { router } from 'expo-router';
+import { useAccounts } from '../useAccounts';
 
 // Mock dependencies
 jest.mock('@/src/data/repositories/accounts/accounts-repository');
@@ -13,14 +14,17 @@ jest.mock('@/src/ui/auth/view-models/useAuth');
 jest.mock('@/src/shared/hooks/use-loading');
 jest.mock('@/src/shared/hooks/use-alert-box');
 jest.mock('@/src/ui/dashboard/stores/dashboard-store');
-jest.mock('@react-navigation/native', () => ({
-  useFocusEffect: (callback: () => void) => {
-    const React = require('react');
-    React.useEffect(() => {
-      callback();
-    }, []);
-  },
-}));
+jest.mock('@react-navigation/native', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { useEffect } = require('react');
+  return {
+    useFocusEffect: (callback: () => void) => {
+      useEffect(() => {
+        callback();
+      }, []);
+    },
+  };
+});
 
 describe('useAccounts', () => {
   const mockUser = { id: 'user-123' };
@@ -68,7 +72,7 @@ describe('useAccounts', () => {
 
     renderHook(() => useAccounts());
 
-    await act(async () => {});
+    await act(async () => { });
 
     expect(mockSetMessage).toHaveBeenCalledWith(expect.stringContaining('Erro ao carregar contas'));
     expect(mockSetIsVisible).toHaveBeenCalledWith(true);
@@ -81,7 +85,7 @@ describe('useAccounts', () => {
     const { result } = renderHook(() => useAccounts());
 
     // Wait for initial fetch
-    await act(async () => {});
+    await act(async () => { });
 
     await act(async () => {
       await result.current.deleteAccount('1');
@@ -108,11 +112,13 @@ describe('useAccounts', () => {
       await result.current.handleSaveAccount();
     });
 
-    expect(accountsRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-      name: 'New Account',
-      balance: 150.5,
-      user_id: 'user-123',
-    }));
+    expect(accountsRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'New Account',
+        balance: 150.5,
+        user_id: 'user-123',
+      }),
+    );
     expect(mockFetchDashboardData).toHaveBeenCalled();
     expect(router.back).toHaveBeenCalled();
   });

@@ -28,9 +28,7 @@ export const TransactionListGroup: React.FC<TransactionListGroupProps> = ({
     <View style={styles.groupContainer}>
       <View style={styles.groupHeader}>
         <Text style={[styles.groupTitle, { color: colors.text }]}>{title}</Text>
-        <Text style={[styles.groupTotal, { color: colors.textTertiary }]}>
-          {formatCurrency(total)}
-        </Text>
+        <Text style={[styles.groupTotal, { color: colors.textTertiary }]}>{formatCurrency(total)}</Text>
       </View>
       <View style={styles.transactionsList}>
         {data.map((tx) => (

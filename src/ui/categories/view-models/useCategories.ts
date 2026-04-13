@@ -22,38 +22,44 @@ export function useCategories(id?: string) {
   const [color, setColor] = useState('#006239'); // Default emerald
   const [icon, setIcon] = useState('category');
 
-  const fetchCategories = useCallback(async (showLoading = true) => {
-    try {
-      if (showLoading) setIsLoading(true);
-      const { data, error } = await categoriesRepository.getAll();
-      if (error) throw error;
-      setCategories(data || []);
-    } catch (error) {
-      setMessage(`Erro ao carregar categorias!\n${mapPostgresError(error)}`);
-      setIsVisible(true);
-    } finally {
-      if (showLoading) setIsLoading(false);
-    }
-  }, [setIsLoading, setMessage, setIsVisible]);
-
-  const fetchCategory = useCallback(async (categoryId: string, showLoading = true) => {
-    try {
-      if (showLoading) setIsLoading(true);
-      const { data, error } = await categoriesRepository.getById(categoryId);
-      if (error) throw error;
-      if (data) {
-        setName(data.name);
-        setType(data.type);
-        setColor(data.color || '#006239');
-        setIcon(data.icon || 'category');
+  const fetchCategories = useCallback(
+    async (showLoading = true) => {
+      try {
+        if (showLoading) setIsLoading(true);
+        const { data, error } = await categoriesRepository.getAll();
+        if (error) throw error;
+        setCategories(data || []);
+      } catch (error) {
+        setMessage(`Erro ao carregar categorias!\n${mapPostgresError(error)}`);
+        setIsVisible(true);
+      } finally {
+        if (showLoading) setIsLoading(false);
       }
-    } catch (error) {
-      setMessage(`Erro ao carregar categoria!\n${mapPostgresError(error)}`);
-      setIsVisible(true);
-    } finally {
-      if (showLoading) setIsLoading(false);
-    }
-  }, [setIsLoading, setMessage, setIsVisible]);
+    },
+    [setIsLoading, setMessage, setIsVisible],
+  );
+
+  const fetchCategory = useCallback(
+    async (categoryId: string, showLoading = true) => {
+      try {
+        if (showLoading) setIsLoading(true);
+        const { data, error } = await categoriesRepository.getById(categoryId);
+        if (error) throw error;
+        if (data) {
+          setName(data.name);
+          setType(data.type);
+          setColor(data.color || '#006239');
+          setIcon(data.icon || 'category');
+        }
+      } catch (error) {
+        setMessage(`Erro ao carregar categoria!\n${mapPostgresError(error)}`);
+        setIsVisible(true);
+      } finally {
+        if (showLoading) setIsLoading(false);
+      }
+    },
+    [setIsLoading, setMessage, setIsVisible],
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -62,7 +68,7 @@ export function useCategories(id?: string) {
       } else {
         fetchCategories(false); // Background refresh for list
       }
-    }, [id, fetchCategories, fetchCategory])
+    }, [id, fetchCategories, fetchCategory]),
   );
 
   const deleteCategory = async (id: string) => {
@@ -71,7 +77,7 @@ export function useCategories(id?: string) {
       const { error } = await categoriesRepository.delete(id);
       if (error) throw error;
 
-      setCategories(prev => prev.filter(c => c.id !== id));
+      setCategories((prev) => prev.filter((c) => c.id !== id));
     } catch (error) {
       setMessage(`Erro ao excluir categoria!\n${mapPostgresError(error)}`);
       setIsVisible(true);

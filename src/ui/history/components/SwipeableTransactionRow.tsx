@@ -6,10 +6,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import Reanimated, {
-  SharedValue,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import Reanimated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 
 interface SwipeableTransactionRowProps {
   icon: MaterialIconName;
@@ -34,7 +31,7 @@ export function SwipeableTransactionRow({
 }: SwipeableTransactionRowProps) {
   const { colors, isDark } = useTheme();
 
-  const renderLeftActions = (_prog: SharedValue<number>, drag: SharedValue<number>) => {
+  const LeftActions = ({ drag }: { drag: SharedValue<number> }) => {
     const styleAnimation = useAnimatedStyle(() => {
       return {
         transform: [{ translateX: drag.value - 80 }],
@@ -43,17 +40,14 @@ export function SwipeableTransactionRow({
 
     return (
       <Reanimated.View style={[styles.leftAction, styleAnimation]}>
-        <RectButton
-          style={[styles.actionButton, { backgroundColor: colors.danger }]}
-          onPress={onDelete}
-        >
+        <RectButton style={[styles.actionButton, { backgroundColor: colors.danger }]} onPress={onDelete}>
           <MaterialIcons name="delete" size={24} color={isDark ? colors.background : colors.surface} />
         </RectButton>
       </Reanimated.View>
     );
   };
 
-  const renderRightActions = (_prog: SharedValue<number>, drag: SharedValue<number>) => {
+  const RightActions = ({ drag }: { drag: SharedValue<number> }) => {
     const styleAnimation = useAnimatedStyle(() => {
       return {
         transform: [{ translateX: drag.value + 80 }],
@@ -62,15 +56,16 @@ export function SwipeableTransactionRow({
 
     return (
       <Reanimated.View style={[styles.rightAction, styleAnimation]}>
-        <RectButton
-          style={[styles.actionButton, { backgroundColor: colors.primary }]}
-          onPress={onEdit}
-        >
+        <RectButton style={[styles.actionButton, { backgroundColor: colors.primary }]} onPress={onEdit}>
           <MaterialIcons name="edit" size={24} color={isDark ? colors.onPrimary : colors.surface} />
         </RectButton>
       </Reanimated.View>
     );
   };
+
+  const renderLeftActions = (_prog: SharedValue<number>, drag: SharedValue<number>) => <LeftActions drag={drag} />;
+
+  const renderRightActions = (_prog: SharedValue<number>, drag: SharedValue<number>) => <RightActions drag={drag} />;
 
   return (
     <ReanimatedSwipeable
@@ -87,8 +82,12 @@ export function SwipeableTransactionRow({
             <MaterialIcons name={icon} size={24} color={iconColor || colors.primary} />
           </View>
           <View style={styles.textContainer}>
-            <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>{title}</Text>
-            <Text style={[styles.subtitle, { color: colors.textSecondary }]} numberOfLines={1}>{subtitle}</Text>
+            <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
+              {title}
+            </Text>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]} numberOfLines={1}>
+              {subtitle}
+            </Text>
           </View>
         </View>
         <View style={styles.rightContent}>

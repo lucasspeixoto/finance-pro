@@ -1,6 +1,7 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useTheme } from '@/src/core/theme/theme.hooks';
+import { fireEvent, render } from '@testing-library/react-native';
+import React from 'react';
 import ThemedDropdown from '../ThemedDropdown';
 
 jest.mock('@/src/core/theme/theme.hooks');
@@ -30,11 +31,7 @@ describe('ThemedDropdown', () => {
 
   it('should render correctly with label and placeholder', () => {
     const { getByText } = render(
-      <ThemedDropdown 
-        label="Select Account" 
-        options={mockOptions} 
-        onSelect={mockOnSelect} 
-      />
+      <ThemedDropdown label="Select Account" options={mockOptions} onSelect={mockOnSelect} />,
     );
 
     expect(getByText('SELECT ACCOUNT')).toBeTruthy();
@@ -42,30 +39,20 @@ describe('ThemedDropdown', () => {
   });
 
   it('should render selected option label', () => {
-    const { getByText } = render(
-      <ThemedDropdown 
-        value="1" 
-        options={mockOptions} 
-        onSelect={mockOnSelect} 
-      />
-    );
+    const { getByText } = render(<ThemedDropdown value="1" options={mockOptions} onSelect={mockOnSelect} />);
 
     expect(getByText('Option 1')).toBeTruthy();
   });
 
   it('should open modal when pressed', () => {
     const { getByText, queryByText } = render(
-      <ThemedDropdown 
-        label="Select" 
-        options={mockOptions} 
-        onSelect={mockOnSelect} 
-      />
+      <ThemedDropdown label="Select" options={mockOptions} onSelect={mockOnSelect} />,
     );
 
     // Modal content should not be initially visible in a way that is easily queryable if not rendered
     // But since we use Modal, we can check if the modal title (label or placeholder) appears after press
     fireEvent.press(getByText('Selecione uma opção'));
-    
+
     // In many RN testing environments, Modal is mocked to always render its children
     // or we might need to look for elements inside it.
     expect(getByText('Option 1')).toBeTruthy();
@@ -73,12 +60,7 @@ describe('ThemedDropdown', () => {
   });
 
   it('should call onSelect and close modal when an option is pressed', () => {
-    const { getByText } = render(
-      <ThemedDropdown 
-        options={mockOptions} 
-        onSelect={mockOnSelect} 
-      />
-    );
+    const { getByText } = render(<ThemedDropdown options={mockOptions} onSelect={mockOnSelect} />);
 
     fireEvent.press(getByText('Selecione uma opção'));
     fireEvent.press(getByText('Option 2'));
@@ -88,11 +70,7 @@ describe('ThemedDropdown', () => {
 
   it('should render error message', () => {
     const { getByText } = render(
-      <ThemedDropdown 
-        options={mockOptions} 
-        onSelect={mockOnSelect} 
-        error="Required field" 
-      />
+      <ThemedDropdown options={mockOptions} onSelect={mockOnSelect} error="Required field" />,
     );
 
     expect(getByText('Required field')).toBeTruthy();

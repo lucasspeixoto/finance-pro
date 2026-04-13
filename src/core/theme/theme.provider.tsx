@@ -46,15 +46,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     }
   };
 
-  const isDark = themeMode === 'system' 
-    ? systemColorScheme === 'dark' 
-    : themeMode === 'dark';
+  const isDark = themeMode === 'system' ? systemColorScheme === 'dark' : themeMode === 'dark';
 
   const colors = isDark ? darkColors : lightColors;
 
-  return (
-    <ThemeContext.Provider value={{ colors, isDark, themeMode, setThemeMode }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ colors, isDark, themeMode, setThemeMode }}>{children}</ThemeContext.Provider>;
 }

@@ -21,7 +21,7 @@ export default function HomeScreen() {
     topCategories,
     recentTransactions,
     accounts,
-    fetchDashboardData
+    fetchDashboardData,
   } = useDashboard();
 
   useEffect(() => {
@@ -41,11 +41,7 @@ export default function HomeScreen() {
           />
 
           <View style={styles.contentLayout}>
-            <ExpenseCategoriesCard
-              topCategories={topCategories}
-              monthlyExpense={monthlyExpense}
-              colors={colors}
-            />
+            <ExpenseCategoriesCard topCategories={topCategories} monthlyExpense={monthlyExpense} colors={colors} />
 
             <RecentTransactionsCard
               transactions={recentTransactions}
@@ -53,11 +49,7 @@ export default function HomeScreen() {
               onSeeAll={() => router.push('/(tabs)/history')}
             />
 
-            <AccountsSection
-              accounts={accounts}
-              colors={colors}
-              isDark={isDark}
-            />
+            <AccountsSection accounts={accounts} colors={colors} isDark={isDark} />
           </View>
         </View>
       </ScrollView>
@@ -77,7 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: Platform.OS === 'ios' ? 120 : 100
+    paddingBottom: Platform.OS === 'ios' ? 120 : 100,
   },
   mainContent: {
     paddingHorizontal: 24,

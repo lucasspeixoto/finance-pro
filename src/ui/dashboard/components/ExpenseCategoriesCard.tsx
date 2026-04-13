@@ -38,11 +38,11 @@ export const ExpenseCategoriesCard: React.FC<ExpenseCategoriesCardProps> = ({
               data={topCategories.map((cat, i) => ({
                 label: cat.name,
                 value: cat.amount,
-                color: cat.color || (i === 0 ? colors.primary : i === 1 ? colors.tertiary : colors.danger)
+                color: cat.color || (i === 0 ? colors.primary : i === 1 ? colors.tertiary : colors.danger),
               }))}
-              colorKey={"color"}
-              valueKey={"value"}
-              labelKey={"label"}
+              colorKey={'color'}
+              valueKey={'value'}
+              labelKey={'label'}
             >
               <Pie.Chart innerRadius={65} />
             </PolarChart>
@@ -66,7 +66,15 @@ export const ExpenseCategoriesCard: React.FC<ExpenseCategoriesCardProps> = ({
           topCategories.map((cat, index) => (
             <View key={cat.id || index} style={styles.categoryRow}>
               <View style={styles.categoryRowLeft}>
-                <View style={[styles.dot, { backgroundColor: cat.color || (index === 0 ? colors.primary : index === 1 ? colors.tertiary : colors.danger) }]} />
+                <View
+                  style={[
+                    styles.dot,
+                    {
+                      backgroundColor:
+                        cat.color || (index === 0 ? colors.primary : index === 1 ? colors.tertiary : colors.danger),
+                    },
+                  ]}
+                />
                 <Text style={[styles.categoryName, { color: colors.textSecondary }]}>{cat.name}</Text>
               </View>
               <Text style={[styles.categoryPercentage, { color: colors.text }]}>{cat.percentage}%</Text>

@@ -12,21 +12,15 @@ interface AccountsSectionProps {
   isDark: boolean;
 }
 
-export const AccountsSection: React.FC<AccountsSectionProps> = ({
-  accounts,
-  colors,
-  isDark,
-}) => {
+export const AccountsSection: React.FC<AccountsSectionProps> = ({ accounts, colors, isDark }) => {
   return (
-    <View
-      style={[styles.accountsSection, { backgroundColor: colors.surfaceContainer, borderColor: colors.border }]}
-    >
+    <View style={[styles.accountsSection, { backgroundColor: colors.surfaceContainer, borderColor: colors.border }]}>
       <Text style={[styles.cardTitle, { color: colors.text, marginBottom: 16 }]}>Minhas Contas</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.accountsScroll}>
         {accounts.length > 0 ? (
           [...accounts]
             .sort((a, b) => Number(b.balance) - Number(a.balance))
-            .map(acc => (
+            .map((acc) => (
               <AccountCard
                 key={acc.id}
                 name={acc.name}
@@ -35,9 +29,7 @@ export const AccountsSection: React.FC<AccountsSectionProps> = ({
               />
             ))
         ) : (
-          <Text style={{ color: colors.textTertiary, padding: 16 }}>
-            Nenhuma conta encontrada
-          </Text>
+          <Text style={{ color: colors.textTertiary, padding: 16 }}>Nenhuma conta encontrada</Text>
         )}
       </ScrollView>
     </View>

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 interface DbError {
   code?: string;
   message?: string;
@@ -9,16 +10,12 @@ interface DbError {
  * Type guard to check if an unknown error object matches the DbError interface.
  */
 const isDbError = (error: unknown): error is DbError => {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    ('code' in error || 'message' in error)
-  );
+  return typeof error === 'object' && error !== null && ('code' in error || 'message' in error);
 };
 
 /**
  * Maps PostgreSQL error codes to user-friendly messages.
- * 
+ *
  * @param error - The error object (from catch block).
  * @returns A localized, human-readable error message.
  */

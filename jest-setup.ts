@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import '@testing-library/jest-native/extend-expect';
 
 // Aggressively mock Expo internal winter modules before anything else loads them
@@ -16,7 +17,7 @@ jest.mock('expo-constants', () => ({
 
 // Mocking AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () =>
-  require('@react-native-async-storage/async-storage/jest/async-storage-mock')
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
 
 // Mocking Reanimated
@@ -92,7 +93,7 @@ jest.mock('@/src/utils/supabase', () => {
     match: jest.fn().mockReturnThis(),
     gte: jest.fn().mockReturnThis(),
     lte: jest.fn().mockReturnThis(),
-    then: jest.fn().mockImplementation(function(callback) {
+    then: jest.fn().mockImplementation(function (callback) {
       return Promise.resolve(callback({ data: null, error: null }));
     }),
   };

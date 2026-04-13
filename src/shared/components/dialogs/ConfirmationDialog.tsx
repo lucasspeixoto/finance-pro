@@ -28,32 +28,24 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
     <Modal transparent visible={visible} animationType="fade">
       <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
         <View style={[styles.container, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.title, { color: colors.text }]}>
-            {title}
-          </Text>
-          <Text style={[styles.message, { color: colors.textSecondary }]}>
-            {message}
-          </Text>
-          
+          <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+          <Text style={[styles.message, { color: colors.textSecondary }]}>{message}</Text>
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.button, styles.cancelButton, { borderColor: colors.border }]}
               onPress={onClose}
               activeOpacity={0.7}
             >
-              <Text style={[styles.buttonText, { color: colors.textSecondary }]}>
-                {cancelText}
-              </Text>
+              <Text style={[styles.buttonText, { color: colors.textSecondary }]}>{cancelText}</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.danger }]}
               onPress={onConfirm}
               activeOpacity={0.8}
             >
-              <Text style={[styles.buttonText, { color: colors.background }]}>
-                {confirmText}
-              </Text>
+              <Text style={[styles.buttonText, { color: colors.background }]}>{confirmText}</Text>
             </TouchableOpacity>
           </View>
         </View>
