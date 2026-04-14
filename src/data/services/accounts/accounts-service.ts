@@ -24,6 +24,18 @@ class AccountsService {
   async update(id: string, account: Partial<Account>): Promise<{ data: Account | null; error: PostgrestError | null }> {
     return await supabase.from('accounts').update(account).eq('id', id).select().single();
   }
+
+  async transferBalance(
+    fromAccountId: string,
+    toAccountId: string,
+    amount: number,
+  ): Promise<{ data: boolean | null; error: PostgrestError | null }> {
+    return await supabase.rpc('transfer_balance_between_accounts', {
+      p_amount: amount,
+      p_from_account_id: fromAccountId,
+      p_to_account_id: toAccountId,
+    });
+  }
 }
 
 export const accountsService = new AccountsService();

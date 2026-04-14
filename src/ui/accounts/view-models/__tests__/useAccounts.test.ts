@@ -8,7 +8,6 @@ import { act, renderHook } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { useAccounts } from '../useAccounts';
 
-// Mock dependencies
 jest.mock('@/src/data/repositories/accounts/accounts-repository');
 jest.mock('@/src/ui/auth/view-models/useAuth');
 jest.mock('@/src/shared/hooks/use-loading');
@@ -56,14 +55,11 @@ describe('useAccounts', () => {
 
     const { result } = renderHook(() => useAccounts());
 
-    // act is needed for state updates
-    await act(async () => {
-      // Triggered by useFocusEffect in our mock
-    });
+    await act(async () => { });
 
     expect(accountsRepository.getAll).toHaveBeenCalled();
     expect(result.current.accounts).toHaveLength(2);
-    expect(result.current.accounts[0].balance).toBe(200); // Sorted by balance
+    expect(result.current.accounts[0].balance).toBe(200);
   });
 
   it('should handle error when fetching accounts', async () => {
@@ -84,7 +80,6 @@ describe('useAccounts', () => {
 
     const { result } = renderHook(() => useAccounts());
 
-    // Wait for initial fetch
     await act(async () => { });
 
     await act(async () => {
@@ -133,5 +128,38 @@ describe('useAccounts', () => {
     expect(mockSetMessage).toHaveBeenCalledWith('O nome da conta é obrigatório!');
     expect(mockSetIsVisible).toHaveBeenCalledWith(true);
     expect(accountsRepository.create).not.toHaveBeenCalled();
+  });
+
+  it('should transfer balance successfully', async () => {
+    (accountsRepository.getAll as jest.Mock).mockResolvedValue({ data: mockAccounts, error: null });
+    (accountsRepository.transferBalance as jest.Mock).mockResolvedValue({ data: true, error: null });
+
+    const { result } = renderHook(() => useAccounts());
+
+    await act(async () => { });
+
+    await act(async () => {
+      await result.current.transferBalance('2', '1', '50');
+    });
+
+    expect(accountsRepository.transferBalance).toHaveBeenCalledWith('2', '1', 50);
+    expect(mockFetchDashboardData).toHaveBeenCalled();
+    expect(accountsRepository.getAll).toHaveBeenCalledTimes(2);
+  });
+
+  it('should block transfer when balance is insufficient', async () => {
+    (accountsRepository.getAll as jest.Mock).mockResolvedValue({ data: mockAccounts, error: null });
+
+    const { result } = renderHook(() => useAccounts());
+
+    await act(async () => { });
+
+    await act(async () => {
+      await result.current.transferBalance('1', '2', '150');
+    });
+
+    expect(accountsRepository.transferBalance).not.toHaveBeenCalled();
+    expect(mockSetMessage).toHaveBeenCalledWith('Saldo insuficiente para realizar a transferência.');
+    expect(mockSetIsVisible).toHaveBeenCalledWith(true);
   });
 });

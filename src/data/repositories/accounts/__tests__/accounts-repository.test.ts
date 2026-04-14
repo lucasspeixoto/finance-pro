@@ -62,4 +62,12 @@ describe('AccountsRepository', () => {
 
     expect(accountsService.delete).toHaveBeenCalledWith('1');
   });
+
+  it('should call accountsService.transferBalance', async () => {
+    (accountsService.transferBalance as jest.Mock).mockResolvedValue({ data: true, error: null });
+
+    await accountsRepository.transferBalance('1', '2', 120);
+
+    expect(accountsService.transferBalance).toHaveBeenCalledWith('1', '2', 120);
+  });
 });

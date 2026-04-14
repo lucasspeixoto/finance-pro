@@ -84,4 +84,17 @@ describe('AccountsService', () => {
     expect(supabase.from).toHaveBeenCalledWith('accounts');
     expect(result.error).toBeNull();
   });
+
+  it('should transfer balance between accounts', async () => {
+    (supabase.rpc as jest.Mock).mockResolvedValue({ data: true, error: null });
+
+    const result = await accountsService.transferBalance('1', '2', 250);
+
+    expect(supabase.rpc).toHaveBeenCalledWith('transfer_balance_between_accounts', {
+      p_amount: 250,
+      p_from_account_id: '1',
+      p_to_account_id: '2',
+    });
+    expect(result.data).toBe(true);
+  });
 });
