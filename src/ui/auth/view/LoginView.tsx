@@ -76,12 +76,6 @@ export const LoginView = () => {
                   }
                 />
               </View>
-
-              <View style={styles.forgotPasswordContainer}>
-                <TouchableOpacity disabled={true}>
-                  <Text style={[styles.forgotPasswordText, { color: colors.primary }]}>Esqueci minha senha</Text>
-                </TouchableOpacity>
-              </View>
             </View>
 
             <TouchableOpacity
@@ -169,13 +163,6 @@ const styles = StyleSheet.create({
   },
   visibilityButton: {
     paddingHorizontal: 16,
-  },
-  forgotPasswordContainer: {
-    alignItems: 'flex-end',
-    marginTop: 8,
-  },
-  forgotPasswordText: {
-    ...typography.link,
   },
   loginButton: {
     height: 56,

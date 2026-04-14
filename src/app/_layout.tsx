@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from '../core/theme/theme.provider';
 import { AlertBox } from '../shared/components/alert-box';
+import { SplashScreenProvider } from '../shared/hooks/useSplashScreen';
 import { AuthProvider } from '../ui/auth/view-models/useAuth';
 import { LoadingOverlay } from '../ui/shared/components/LoadingOverlay';
 
@@ -28,17 +29,17 @@ function MainLayout() {
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      {/* <SplashScreenProvider> */}
-      <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView>
-          <AuthProvider>
-            <MainLayout />
-            <LoadingOverlay />
-            <AlertBox />
-          </AuthProvider>
-        </GestureHandlerRootView>
-      </QueryClientProvider>
-      {/* </SplashScreenProvider> */}
+      <SplashScreenProvider>
+        <QueryClientProvider client={queryClient}>
+          <GestureHandlerRootView>
+            <AuthProvider>
+              <MainLayout />
+              <LoadingOverlay />
+              <AlertBox />
+            </AuthProvider>
+          </GestureHandlerRootView>
+        </QueryClientProvider>
+      </SplashScreenProvider>
     </ThemeProvider>
   );
 }
