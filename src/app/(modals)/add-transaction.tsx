@@ -74,9 +74,9 @@ export default function AddTransactionScreen() {
               { backgroundColor: isDark ? colors.surfaceContainerLow : colors.surface },
             ]}
           >
-            {(['expense', 'income', 'transfer'] as const).map((t) => {
+            {(['expense', 'income'] as const).map((t) => {
               const isSelected = type === t;
-              const labels = { expense: 'Despesa', income: 'Receita', transfer: 'Transferir' };
+              const labels = { expense: 'Despesa', income: 'Receita' };
               return (
                 <TouchableOpacity
                   key={t}

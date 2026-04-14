@@ -41,18 +41,55 @@ class TransactionsService {
   async create(
     transaction: Omit<Transaction, 'id' | 'created_at'>,
   ): Promise<{ data: Transaction | null; error: PostgrestError | null }> {
-    return await supabase.from('transactions').insert([transaction]).select().single();
+    const { data, error } = await supabase.rpc('create_transaction_and_update_balance', {
+      p_user_id: transaction.user_id,
+      p_account_id: transaction.account_id,
+      p_category_id: transaction.category_id ?? null,
+      p_type: transaction.type,
+      p_amount: transaction.amount,
+      p_description: transaction.description ?? null,
+      p_date: transaction.date,
+      p_is_paid: transaction.is_paid,
+      p_notes: transaction.notes ?? null,
+    });
+
+    return { data: data as Transaction | null, error };
   }
 
   async update(
     id: string,
     transaction: Partial<Transaction>,
   ): Promise<{ data: Transaction | null; error: PostgrestError | null }> {
-    return await supabase.from('transactions').update(transaction).eq('id', id).select().single();
+    // Fetch current state to fill in any fields not being updated
+    const { data: current, error: fetchError } = await supabase.from('transactions').select('*').eq('id', id).single();
+
+    if (fetchError || !current) {
+      return { data: null, error: fetchError };
+    }
+
+    const merged = { ...current, ...transaction };
+
+    const { data, error } = await supabase.rpc('update_transaction_and_update_balance', {
+      p_id: id,
+      p_account_id: merged.account_id,
+      p_category_id: merged.category_id ?? null,
+      p_type: merged.type,
+      p_amount: merged.amount,
+      p_description: merged.description ?? null,
+      p_date: merged.date,
+      p_is_paid: merged.is_paid,
+      p_notes: merged.notes ?? null,
+    });
+
+    return { data: data as Transaction | null, error };
   }
 
   async delete(id: string): Promise<{ error: PostgrestError | null }> {
-    return await supabase.from('transactions').delete().eq('id', id);
+    const { error } = await supabase.rpc('delete_transaction_and_update_balance', {
+      p_id: id,
+    });
+
+    return { error };
   }
 }
 

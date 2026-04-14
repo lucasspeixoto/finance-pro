@@ -112,6 +112,11 @@ jest.mock('@/src/utils/supabase', () => {
     supabase: {
       from: jest.fn(() => mockFrom),
       auth: mockAuth,
+      rpc: jest.fn().mockImplementation(() => ({
+        then: jest.fn().mockImplementation(function (callback) {
+          return Promise.resolve(callback({ data: null, error: null }));
+        }),
+      })),
     },
   };
 });
