@@ -20,6 +20,9 @@ interface SwipeableAdminRowProps {
   topRightColor?: string;
   bottomRightColor?: string;
   bottomRightBgColor?: string;
+  secondaryActionIcon?: MaterialIconName;
+  secondaryActionColor?: string;
+  onSecondaryAction?: () => void;
   onDelete: () => void;
   onEdit: () => void;
 }
@@ -36,10 +39,15 @@ export function SwipeableAdminRow({
   topRightColor,
   bottomRightColor,
   bottomRightBgColor,
+  secondaryActionIcon,
+  secondaryActionColor,
+  onSecondaryAction,
   onDelete,
   onEdit,
 }: SwipeableAdminRowProps) {
   const { colors, isDark } = useTheme();
+  const hasSecondaryAction = !!onSecondaryAction && !!secondaryActionIcon;
+  const rightActionWidth = hasSecondaryAction ? 160 : 80;
 
   const LeftAction = ({ drag }: { drag: SharedValue<number> }) => {
     const styleAnimation = useAnimatedStyle(() => {
@@ -60,12 +68,24 @@ export function SwipeableAdminRow({
   const RightAction = ({ drag }: { drag: SharedValue<number> }) => {
     const styleAnimation = useAnimatedStyle(() => {
       return {
-        transform: [{ translateX: drag.value + 80 }],
+        transform: [{ translateX: drag.value + rightActionWidth }],
       };
     });
 
     return (
-      <Reanimated.View style={[styles.rightAction, styleAnimation]}>
+      <Reanimated.View style={[styles.rightAction, hasSecondaryAction && styles.rightActionWide, styleAnimation]}>
+        {hasSecondaryAction && (
+          <RectButton
+            style={[styles.actionButton, { backgroundColor: secondaryActionColor || colors.primary }]}
+            onPress={onSecondaryAction}
+          >
+            <MaterialIcons
+              name={secondaryActionIcon}
+              size={24}
+              color={isDark ? colors.onPrimary : colors.surface}
+            />
+          </RectButton>
+        )}
         <RectButton style={[styles.actionButton, { backgroundColor: colors.primary }]} onPress={onEdit}>
           <MaterialIcons name="edit" size={24} color={isDark ? colors.onPrimary : colors.surface} />
         </RectButton>
@@ -187,6 +207,11 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  rightActionWide: {
+    width: 160,
+    flexDirection: 'row',
+    gap: 12,
   },
   actionButton: {
     width: 50,

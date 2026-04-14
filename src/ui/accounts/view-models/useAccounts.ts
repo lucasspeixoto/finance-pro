@@ -94,6 +94,58 @@ export function useAccounts(id?: string) {
     }
   };
 
+  const transferBalance = async (fromAccountId: string, toAccountId: string, transferAmountInput: string) => {
+    const amount = parseFloat(transferAmountInput.replace(',', '.'));
+
+    if (!fromAccountId || !toAccountId) {
+      setMessage('Selecione as contas de origem e destino.');
+      setIsVisible(true);
+      return false;
+    }
+
+    if (fromAccountId === toAccountId) {
+      setMessage('Escolha contas diferentes para a transferência.');
+      setIsVisible(true);
+      return false;
+    }
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      setMessage('Informe um valor de transferência válido.');
+      setIsVisible(true);
+      return false;
+    }
+
+    const sourceAccount = accounts.find((account) => account.id === fromAccountId);
+
+    if (!sourceAccount) {
+      setMessage('Conta de origem não encontrada.');
+      setIsVisible(true);
+      return false;
+    }
+
+    if (amount > sourceAccount.balance) {
+      setMessage('Saldo insuficiente para realizar a transferência.');
+      setIsVisible(true);
+      return false;
+    }
+
+    try {
+      setIsLoading(true);
+      const { error } = await accountsRepository.transferBalance(fromAccountId, toAccountId, amount);
+      if (error) throw error;
+
+      await fetchAccounts(false);
+      await fetchDashboardData();
+      return true;
+    } catch (error) {
+      setMessage(`Erro ao transferir saldo!\n${mapPostgresError(error)}`);
+      setIsVisible(true);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSaveAccount = async () => {
     if (!name.trim()) {
       setMessage('O nome da conta é obrigatório!');
@@ -160,6 +212,7 @@ export function useAccounts(id?: string) {
     icon,
     setIcon,
     deleteAccount,
+    transferBalance,
     handleSaveAccount,
     handleEditAccount,
     handleAddAccount,
